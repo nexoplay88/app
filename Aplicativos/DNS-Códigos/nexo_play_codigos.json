@@ -1,0 +1,120 @@
+{
+  "versao": 1,
+  "codigos": {
+    "1111": {
+      "nomePrincipal": "nao sei",
+      "fontes": [
+        {
+          "nomeFonte": "tv on",
+          "servidores": [
+            {
+              "serverName": "Explosion",
+              "serverHost": "http://fasttv.sbs"
+            }
+          ]
+        }
+      ]
+    },
+    "2102": {
+      "nomePrincipal": "TV On+",
+      "fontes": [
+        {
+          "nomeFonte": "TV On+",
+          "servidores": [
+            {
+              "serverName": "Speed",
+              "serverHost": "http://speed.tvonplus.shop"
+            },
+            {
+              "serverName": "Galaxy",
+              "serverHost": "http://galaxy.tvonplus.shop"
+            },
+            {
+              "serverName": "Lunar",
+              "serverHost": "http://lunar.tvonplus.shop"
+            },
+            {
+              "serverName": "Atena",
+              "serverHost": "http://atena.tvonplus.shop"
+            },
+            {
+              "serverName": "Seven",
+              "serverHost": "http://seven.tvonplus.shop"
+            }
+          ]
+        },
+        {
+          "nomeFonte": "Netplay",
+          "servidores": [
+            {
+              "serverName": "Explosion",
+              "serverHost": "http://fasttv.sbs"
+            },
+            {
+              "serverName": "Speed",
+              "serverHost": "http://netuno.live"
+            },
+            {
+              "serverName": "Galaxy",
+              "serverHost": "http://galaxy.blcplay.com"
+            },
+            {
+              "serverName": "Lunar",
+              "serverHost": "http://lunar.kkrototv.fun"
+            },
+            {
+              "serverName": "Atena",
+              "serverHost": "http://atena.kkrototv.fun"
+            },
+            {
+              "serverName": "Fire",
+              "serverHost": "http://fire.kkrototv.fun"
+            },
+            {
+              "serverName": "Seven",
+              "serverHost": "http://seven.blcplay.com"
+            }
+          ]
+        }
+      ]
+    },
+    "9999": {
+      "nomePrincipal": "TESTES",
+      "fontes": [
+        {
+          "nomeFonte": "NetPlay",
+          "servidores": [
+            {
+              "serverName": "Seven",
+              "serverHost": "http://seven.blcplay.com"
+            },
+            {
+              "serverName": "Speed",
+              "serverHost": "http://netuno.live"
+            },
+            {
+              "serverName": "Galaxy",
+              "serverHost": "http://galaxy.blcplay.com"
+            },
+            {
+              "serverName": "Lunar",
+              "serverHost": "http://lunar.kkrototv.fun"
+            },
+            {
+              "serverName": "Explosion",
+              "serverHost": "http://fasttv.sbs"
+            },
+            {
+              "serverName": "Atena",
+              "serverHost": "http://atena.kkrototv.fun"
+            },
+            {
+              "serverName": "Fire",
+              "serverHost": "http://fire.kkrototv.fu"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

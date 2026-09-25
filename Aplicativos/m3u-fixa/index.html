@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Gere seu link M3U completo escolhendo o servidor e informando usuário e senha."
+    />
+    <meta name="theme-color" content="#081323" />
+    <title>Gerador M3U Nexo</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23081323'/%3E%3Cpath d='M17 44V20h7l16 15V20h7v24h-7L24 29v15z' fill='%2337d8ff'/%3E%3C/svg%3E"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #060d18;
+        --panel: rgba(12, 27, 48, 0.92);
+        --panel-soft: rgba(18, 38, 65, 0.72);
+        --text: #f3f8ff;
+        --muted: #9eb2ca;
+        --line: rgba(148, 180, 213, 0.18);
+        --accent: #37d8ff;
+        --accent-strong: #0db9ea;
+        --violet: #8c7bff;
+        --success: #42e3a4;
+        --danger: #ff8294;
+        --shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 28px 18px;
+        display: grid;
+        place-items: center;
+        overflow-x: hidden;
+        background:
+          radial-gradient(circle at 12% 10%, rgba(55, 216, 255, 0.15), transparent 34%),
+          radial-gradient(circle at 88% 86%, rgba(140, 123, 255, 0.16), transparent 36%),
+          linear-gradient(145deg, #050b14 0%, #081323 50%, #090f1e 100%);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.34;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        background-size: 38px 38px;
+        mask-image: linear-gradient(to bottom, black, transparent 78%);
+      }
+
+      .shell {
+        position: relative;
+        width: min(100%, 720px);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 18px 6px;
+      }
+
+      .brand-mark {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(55, 216, 255, 0.35);
+        border-radius: 13px;
+        background: linear-gradient(145deg, rgba(55, 216, 255, 0.18), rgba(140, 123, 255, 0.15));
+        box-shadow: 0 0 30px rgba(55, 216, 255, 0.12);
+        color: var(--accent);
+        font-size: 1.15rem;
+        font-weight: 850;
+        letter-spacing: -0.06em;
+      }
+
+      .brand-name {
+        margin: 0;
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #c9dcf0;
+      }
+
+      .brand-note {
+        margin: 3px 0 0;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      main {
+        position: relative;
+        border: 1px solid var(--line);
+        border-radius: 26px;
+        background: linear-gradient(155deg, rgba(15, 33, 57, 0.97), rgba(8, 20, 36, 0.96));
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      main::before {
+        content: "";
+        display: block;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent), var(--violet));
+      }
+
+      .content {
+        padding: clamp(24px, 5vw, 42px);
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 520px;
+        font-size: clamp(1.85rem, 6vw, 3rem);
+        line-height: 1.04;
+        letter-spacing: -0.045em;
+      }
+
+      .intro {
+        margin: 13px 0 30px;
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.55;
+      }
+
+      form {
+        display: grid;
+        gap: 18px;
+      }
+
+      .field {
+        display: grid;
+        gap: 8px;
+      }
+
+      label {
+        color: #dcecff;
+        font-size: 0.94rem;
+        font-weight: 720;
+      }
+
+      .control-wrap {
+        position: relative;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        border: 1px solid rgba(160, 192, 224, 0.24);
+        border-radius: 14px;
+        background: rgba(4, 14, 26, 0.68);
+        color: var(--text);
+        font: inherit;
+        outline: none;
+        transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
+      }
+
+      input,
+      select {
+        min-height: 54px;
+        padding: 0 15px;
+        font-size: 1rem;
+      }
+
+      select {
+        cursor: pointer;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: var(--accent);
+        background: rgba(5, 18, 32, 0.92);
+        box-shadow: 0 0 0 4px rgba(55, 216, 255, 0.12);
+      }
+
+      input::placeholder,
+      textarea::placeholder {
+        color: #71869e;
+      }
+
+      .password-input {
+        padding-right: 72px;
+      }
+
+      .show-password {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        min-height: 38px;
+        padding: 0 10px;
+        border: 0;
+        border-radius: 9px;
+        background: transparent;
+        color: var(--accent);
+        font: inherit;
+        font-size: 0.82rem;
+        font-weight: 760;
+        cursor: pointer;
+      }
+
+      .show-password:hover,
+      .show-password:focus-visible {
+        background: rgba(55, 216, 255, 0.1);
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        margin-top: 4px;
+      }
+
+      button {
+        min-height: 52px;
+        border: 0;
+        border-radius: 14px;
+        font: inherit;
+        font-size: 0.96rem;
+        font-weight: 800;
+        cursor: pointer;
+        transition: transform 150ms ease, filter 150ms ease, background 150ms ease;
+      }
+
+      button:active {
+        transform: translateY(1px);
+      }
+
+      .primary {
+        padding: 0 24px;
+        background: linear-gradient(115deg, var(--accent), #5dbdff);
+        color: #03111d;
+        box-shadow: 0 12px 30px rgba(55, 216, 255, 0.2);
+      }
+
+      .primary:hover,
+      .primary:focus-visible {
+        filter: brightness(1.08);
+      }
+
+      .secondary {
+        padding: 0 19px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.045);
+        color: #c4d7ea;
+      }
+
+      .secondary:hover,
+      .secondary:focus-visible {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .message {
+        min-height: 22px;
+        margin: -4px 0 0;
+        color: var(--danger);
+        font-size: 0.9rem;
+      }
+
+      .result {
+        display: none;
+        margin-top: 26px;
+        padding: 20px;
+        border: 1px solid rgba(66, 227, 164, 0.24);
+        border-radius: 18px;
+        background: linear-gradient(145deg, rgba(66, 227, 164, 0.075), rgba(55, 216, 255, 0.055));
+      }
+
+      .result.visible {
+        display: block;
+        animation: reveal 220ms ease-out;
+      }
+
+      @keyframes reveal {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+      }
+
+      .result-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 11px;
+      }
+
+      .result-title {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin: 0;
+        font-size: 0.96rem;
+      }
+
+      .status-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--success);
+        box-shadow: 0 0 14px rgba(66, 227, 164, 0.7);
+      }
+
+      .copy-button {
+        min-height: 40px;
+        padding: 0 14px;
+        background: rgba(66, 227, 164, 0.12);
+        color: #8ff0c7;
+      }
+
+      .links-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .link-card {
+        padding: 15px;
+        border: 1px solid rgba(160, 192, 224, 0.16);
+        border-radius: 15px;
+        background: rgba(4, 14, 26, 0.5);
+      }
+
+      .link-card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 9px;
+      }
+
+      .server-name {
+        margin: 0;
+        color: #dcecff;
+        font-size: 0.94rem;
+        font-weight: 800;
+      }
+
+      .copy-one {
+        min-height: 36px;
+        padding: 0 12px;
+        border: 1px solid rgba(55, 216, 255, 0.18);
+        background: rgba(55, 216, 255, 0.08);
+        color: var(--accent);
+        font-size: 0.82rem;
+      }
+
+      textarea {
+        min-height: 112px;
+        padding: 14px;
+        resize: vertical;
+        font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+        font-size: 0.88rem;
+        line-height: 1.55;
+        overflow-wrap: anywhere;
+      }
+
+      .link-output {
+        min-height: 86px;
+        resize: none;
+      }
+
+      .privacy {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin: 24px 2px 0;
+        color: #849ab2;
+        font-size: 0.84rem;
+        line-height: 1.45;
+      }
+
+      .lock {
+        flex: 0 0 auto;
+        color: var(--accent);
+        font-size: 1rem;
+      }
+
+      @media (max-width: 560px) {
+        body {
+          padding: 18px 12px;
+          place-items: start center;
+        }
+
+        .brand {
+          margin-left: 4px;
+        }
+
+        main {
+          border-radius: 22px;
+        }
+
+        .content {
+          padding: 25px 19px 24px;
+        }
+
+        .intro {
+          margin-bottom: 24px;
+        }
+
+        .actions {
+          grid-template-columns: 1fr;
+        }
+
+        .result-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .copy-button {
+          width: 100%;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="brand" aria-label="Nexo">
+        <div class="brand-mark" aria-hidden="true">N</div>
+        <div>
+          <p class="brand-name">Nexo</p>
+          <p class="brand-note">Ferramenta de configuração</p>
+        </div>
+      </header>
+
+      <main>
+        <div class="content">
+          <h1>Gerador de link M3U</h1>
+          <p class="intro">Informe os dados uma vez para gerar os links de todos os servidores.</p>
+
+          <form id="generator-form" novalidate>
+            <div class="field">
+              <label for="username">Usuário</label>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                inputmode="text"
+                autocomplete="off"
+                autocapitalize="none"
+                spellcheck="false"
+                placeholder="Digite o usuário"
+                required
+              />
+            </div>
+
+            <div class="field">
+              <label for="password">Senha</label>
+              <div class="control-wrap">
+                <input
+                  class="password-input"
+                  id="password"
+                  name="password"
+                  type="password"
+                  autocomplete="off"
+                  placeholder="Digite a senha"
+                  required
+                />
+                <button class="show-password" id="show-password" type="button" aria-controls="password">
+                  Mostrar
+                </button>
+              </div>
+            </div>
+
+            <p class="message" id="form-message" role="alert" aria-live="polite"></p>
+
+            <div class="actions">
+              <button class="primary" type="submit">Gerar os 5 links M3U</button>
+              <button class="secondary" id="clear-button" type="button">Limpar</button>
+            </div>
+          </form>
+
+          <section class="result" id="result" aria-labelledby="result-title" aria-live="polite">
+            <div class="result-head">
+              <h2 class="result-title" id="result-title">
+                <span class="status-dot" aria-hidden="true"></span>
+                5 links prontos
+              </h2>
+              <button class="copy-button" id="copy-all-button" type="button">Copiar todos</button>
+            </div>
+            <div class="links-list" id="links-list"></div>
+          </section>
+
+          <p class="privacy">
+            <span class="lock" aria-hidden="true">●</span>
+            Seus dados são usados somente no seu navegador para montar o link. Nada é armazenado nesta página.
+          </p>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const form = document.querySelector("#generator-form");
+      const username = document.querySelector("#username");
+      const password = document.querySelector("#password");
+      const showPassword = document.querySelector("#show-password");
+      const clearButton = document.querySelector("#clear-button");
+      const result = document.querySelector("#result");
+      const linksList = document.querySelector("#links-list");
+      const copyAllButton = document.querySelector("#copy-all-button");
+      const message = document.querySelector("#form-message");
+
+      const servers = [
+        { name: "Seven", host: "seven-nexo.duckdns.org" },
+        { name: "Explosion", host: "explosion-nexo.duckdns.org" },
+        { name: "Fire", host: "fire-nexo.duckdns.org" },
+        { name: "Galaxy", host: "galaxy-nexo.duckdns.org" },
+        { name: "Speed", host: "speed-nexo.duckdns.org" }
+      ];
+
+      let generatedLinks = [];
+
+      function buildLink(host, user, pass) {
+        const params = new URLSearchParams({
+          username: user,
+          password: pass,
+          type: "m3u_plus",
+          output: "ts"
+        });
+        return `http://${host}/get.php?${params.toString()}`;
+      }
+
+      function renderLinks(links) {
+        linksList.replaceChildren();
+
+        links.forEach(({ name, link }, index) => {
+          const card = document.createElement("article");
+          card.className = "link-card";
+
+          const cardHead = document.createElement("div");
+          cardHead.className = "link-card-head";
+
+          const title = document.createElement("h3");
+          title.className = "server-name";
+          title.textContent = name;
+
+          const copyButton = document.createElement("button");
+          copyButton.className = "copy-one";
+          copyButton.type = "button";
+          copyButton.dataset.linkIndex = String(index);
+          copyButton.textContent = "Copiar";
+          copyButton.setAttribute("aria-label", `Copiar link do servidor ${name}`);
+
+          const field = document.createElement("textarea");
+          field.className = "link-output";
+          field.readOnly = true;
+          field.spellcheck = false;
+          field.value = link;
+          field.setAttribute("aria-label", `Link M3U do servidor ${name}`);
+
+          cardHead.append(title, copyButton);
+          card.append(cardHead, field);
+          linksList.append(card);
+        });
+      }
+
+      function generateLinks() {
+        const user = username.value.trim();
+        const pass = password.value.trim();
+
+        if (!user || !pass) {
+          message.textContent = "Preencha o usuário e a senha para continuar.";
+          result.classList.remove("visible");
+          (!user ? username : password).focus();
+          return [];
+        }
+
+        message.textContent = "";
+        generatedLinks = servers.map(({ name, host }) => ({
+          name,
+          link: buildLink(host, user, pass)
+        }));
+        renderLinks(generatedLinks);
+        result.classList.add("visible");
+        return generatedLinks;
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const links = generateLinks();
+        if (links.length) result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+
+      showPassword.addEventListener("click", () => {
+        const shouldShow = password.type === "password";
+        password.type = shouldShow ? "text" : "password";
+        showPassword.textContent = shouldShow ? "Ocultar" : "Mostrar";
+        showPassword.setAttribute("aria-pressed", String(shouldShow));
+        password.focus();
+      });
+
+      clearButton.addEventListener("click", () => {
+        form.reset();
+        password.type = "password";
+        showPassword.textContent = "Mostrar";
+        showPassword.setAttribute("aria-pressed", "false");
+        generatedLinks = [];
+        linksList.replaceChildren();
+        message.textContent = "";
+        result.classList.remove("visible");
+        username.focus();
+      });
+
+      async function copyText(text, button, successText) {
+        if (!text) return;
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          const temporaryField = document.createElement("textarea");
+          temporaryField.value = text;
+          temporaryField.style.position = "fixed";
+          temporaryField.style.opacity = "0";
+          document.body.append(temporaryField);
+          temporaryField.select();
+          document.execCommand("copy");
+          temporaryField.remove();
+        }
+        const originalText = button.textContent;
+        button.textContent = successText;
+        window.setTimeout(() => {
+          button.textContent = originalText;
+        }, 1800);
+      }
+
+      linksList.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-link-index]");
+        if (!button) return;
+        const item = generatedLinks[Number(button.dataset.linkIndex)];
+        if (item) copyText(item.link, button, "Copiado!");
+      });
+
+      copyAllButton.addEventListener("click", () => {
+        const allLinks = generatedLinks.map(({ name, link }) => `${name}: ${link}`).join("\n\n");
+        copyText(allLinks, copyAllButton, "Todos copiados!");
+      });
+    </script>
+  </body>
+</html>

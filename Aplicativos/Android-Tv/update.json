@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "versionCode": 49,
+  "versionName": "1.6.3",
+  "latestVersionCode": 49,
+  "latestVersionInfo": "Versão 1.6.3",
+  "codeDownloader": "",
+  "releaseNotes": [
+    "Borracha nos detalhes das séries com o mesmo componente, visual e seleção do coração.",
+    "Corrige o tema do modal de limpar assistidos, evitando a falha ao abri-lo na tela de detalhes.",
+    "Zerar app mantendo login agora restaura também o cadastro da conta, o identificador e o estado de conexão.",
+    "Protege o acesso salvo contra uma leitura vazia do cadastro durante a recuperação após a limpeza.",
+    "Mantém as demais alterações da versão 1.6.2 e não apaga dados ao instalar a atualização."
+  ],
+  "url": "https://tvonplus.github.io/app/Android%20TV/NexoPlay_v1.6.3.apk",
+  "apk": "https://tvonplus.github.io/app/Android%20TV/NexoPlay_v1.6.3.apk",
+  "mandatory": false,
+  "sha256": "9C1DA997D82CD856DDB29C8FDE10D9AE72EC0FBC10FB31AABE82E8C6BBEE87B2"
+}

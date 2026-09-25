@@ -1,0 +1,1531 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10233f">
+  <meta name="description" content="Painel de controle de clientes, mensalidades e pagamentos.">
+  <title>Mensalista — Controle de clientes</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2310233f'/%3E%3Cpath d='M18 22h28v24H18z' fill='%23fff'/%3E%3Cpath d='M18 22h28v9H18z' fill='%232bd6a3'/%3E%3Cpath d='M25 17v10M39 17v10' stroke='%23fff' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='39' cy='39' r='5' fill='%23ffb84d'/%3E%3C/svg%3E">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <style>
+    :root {
+      color-scheme: light;
+      --navy-950: #071426;
+      --navy-900: #10233f;
+      --navy-800: #183352;
+      --ink: #122033;
+      --muted: #66748a;
+      --line: #dce4ee;
+      --surface: #ffffff;
+      --canvas: #f3f6fa;
+      --mint: #20c997;
+      --mint-soft: #e6f9f3;
+      --amber: #f0a128;
+      --amber-soft: #fff5df;
+      --red: #df5261;
+      --red-soft: #feebed;
+      --blue: #376ce7;
+      --blue-soft: #edf2ff;
+      --shadow: 0 18px 50px rgba(30, 48, 75, .08);
+      --radius-lg: 22px;
+      --radius-md: 15px;
+      --radius-sm: 11px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { font-size: 16px; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      height: 125vh;
+      overflow: hidden;
+      zoom: .8;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .55; }
+    a { color: inherit; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+    :focus-visible {
+      outline: 3px solid rgba(55, 108, 231, .32);
+      outline-offset: 2px;
+    }
+
+    .app-shell {
+      height: 125vh;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      min-height: 100vh;
+      padding: 24px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 18% 15%, rgba(32, 201, 151, .2), transparent 27%),
+        radial-gradient(circle at 85% 82%, rgba(55, 108, 231, .2), transparent 30%),
+        linear-gradient(155deg, var(--navy-900), var(--navy-950));
+    }
+
+    .login-screen[hidden] { display: none; }
+
+    .login-card {
+      width: min(430px, 100%);
+      padding: 31px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 24px;
+      background: #fff;
+      box-shadow: 0 32px 100px rgba(0, 0, 0, .32);
+    }
+
+    .login-mark {
+      width: 52px;
+      height: 52px;
+      margin-bottom: 21px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: var(--mint);
+      color: var(--navy-950);
+      box-shadow: 0 12px 30px rgba(32, 201, 151, .24);
+    }
+
+    .login-mark svg { width: 24px; height: 24px; }
+    .login-card h1 { margin: 0; font-size: 1.75rem; }
+    .login-card > p { margin: 8px 0 22px; color: var(--muted); font-size: .9rem; }
+    .login-field label { display: block; margin-bottom: 7px; color: #39495e; font-size: .82rem; font-weight: 760; }
+    .login-field input { width: 100%; min-height: 48px; padding: 0 13px; border: 1px solid #cfdae5; border-radius: 12px; color: var(--ink); background: #fff; }
+    .login-field input:focus { border-color: var(--blue); outline: 3px solid rgba(55, 108, 231, .13); }
+    .login-error { min-height: 20px; margin: 8px 0 3px; color: var(--red); font-size: .78rem; font-weight: 680; }
+    .login-submit { width: 100%; margin-top: 7px; }
+    .login-security { margin-top: 17px; display: flex; align-items: center; justify-content: center; gap: 7px; color: #8490a1; font-size: .72rem; }
+    .login-security svg { width: 14px; height: 14px; }
+
+    .install-ready { border-color: rgba(32, 201, 151, .55); box-shadow: 0 0 0 3px rgba(32, 201, 151, .1); }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 125vh;
+      padding: 28px 20px 22px;
+      background:
+        radial-gradient(circle at 20% 3%, rgba(43, 214, 163, .18), transparent 24%),
+        linear-gradient(165deg, var(--navy-900), var(--navy-950));
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 8px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      background: var(--mint);
+      color: var(--navy-950);
+      box-shadow: 0 9px 28px rgba(32, 201, 151, .24);
+    }
+
+    .brand-name { font-size: 1.12rem; font-weight: 800; letter-spacing: -.02em; }
+    .brand-note { color: #a8b8ca; font-size: .78rem; }
+
+    .nav-label {
+      margin: 42px 10px 10px;
+      color: #70859d;
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .nav-item {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 13px;
+      display: flex;
+      gap: 11px;
+      align-items: center;
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .source-card {
+      margin-top: auto;
+      padding: 15px;
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 16px;
+      background: rgba(255,255,255,.055);
+    }
+
+    .source-head {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: .82rem;
+      font-weight: 750;
+    }
+
+    .source-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--amber);
+      box-shadow: 0 0 0 4px rgba(240, 161, 40, .13);
+    }
+
+    .source-dot.ok { background: var(--mint); box-shadow: 0 0 0 4px rgba(32, 201, 151, .13); }
+    .source-dot.error { background: var(--red); box-shadow: 0 0 0 4px rgba(223, 82, 97, .13); }
+    .source-meta { margin-top: 7px; color: #91a3b8; font-size: .75rem; }
+
+    .main {
+      width: 100%;
+      max-width: 1640px;
+      height: 125vh;
+      margin: 0 auto;
+      padding: 22px 28px 24px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 22px;
+    }
+
+    .eyebrow {
+      color: var(--blue);
+      font-size: .74rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 3px 0 0;
+      font-size: clamp(1.65rem, 3vw, 2.35rem);
+      line-height: 1.15;
+      letter-spacing: -.045em;
+    }
+
+    .top-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 9px; }
+
+    .btn {
+      min-height: 43px;
+      padding: 0 15px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      font-weight: 720;
+      box-shadow: 0 5px 20px rgba(34, 52, 78, .04);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); border-color: #bdc9d7; }
+    .btn-primary { border-color: var(--navy-900); background: var(--navy-900); color: #fff; }
+    .btn-primary:hover { background: var(--navy-800); border-color: var(--navy-800); }
+    .btn-mint { border-color: var(--mint); background: var(--mint); color: var(--navy-950); }
+    .btn-danger { color: var(--red); }
+    .btn-danger-solid { border-color: var(--red); background: var(--red); color: #fff; }
+    .btn-danger-solid:hover { border-color: #bd3344; background: #bd3344; }
+    .btn svg, .icon-btn svg, .brand-mark svg, .nav-item svg { width: 18px; height: 18px; flex: 0 0 auto; }
+
+    .sync-strip {
+      margin-top: 13px;
+      min-height: 39px;
+      padding: 7px 10px 7px 13px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(255,255,255,.66);
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .sync-message { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .dirty-pill { display: none; padding: 5px 9px; border-radius: 999px; background: var(--amber-soft); color: #8a5907; font-weight: 750; white-space: nowrap; }
+    .dirty-pill.show { display: inline-flex; }
+
+    .month-control { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: .86rem; font-weight: 700; }
+
+    .month-input {
+      min-height: 40px;
+      padding: 0 11px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .summary-grid {
+      margin-top: 11px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(230px, 1.15fr);
+      gap: 11px;
+    }
+
+    .metric-card {
+      min-height: 112px;
+      padding: 14px 17px;
+      border: 1px solid #e1e7ef;
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::after {
+      content: "";
+      position: absolute;
+      right: -38px;
+      bottom: -52px;
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      background: var(--accent-soft, var(--blue-soft));
+    }
+
+    .metric-top { display: flex; justify-content: space-between; gap: 12px; align-items: center; position: relative; z-index: 1; }
+    .metric-label { color: var(--muted); font-size: .82rem; font-weight: 720; }
+    .metric-icon { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; color: var(--accent, var(--blue)); background: var(--accent-soft, var(--blue-soft)); }
+    .metric-icon svg { width: 18px; height: 18px; }
+    .metric-value { margin-top: 9px; font-size: clamp(1.42rem, 2.3vw, 1.9rem); font-weight: 830; letter-spacing: -.045em; line-height: 1; position: relative; z-index: 1; }
+    .metric-caption { margin-top: 5px; color: var(--muted); font-size: .74rem; position: relative; z-index: 1; }
+
+    .progress-card {
+      min-height: 112px;
+      padding: 13px 17px;
+      border: 0;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, var(--navy-900), #173a5e);
+      color: #fff;
+      box-shadow: 0 20px 46px rgba(16, 35, 63, .18);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .progress-card .metric-label { color: #b7c7d8; }
+    .progress-copy { min-width: 0; }
+    .progress-value { margin-top: 7px; font-size: 1.28rem; font-weight: 820; letter-spacing: -.03em; }
+    .progress-caption { margin-top: 3px; color: #9fb2c7; font-size: .72rem; }
+    .progress-ring { --progress: 0deg; width: 66px; height: 66px; flex: 0 0 66px; border-radius: 50%; display: grid; place-items: center; background: conic-gradient(var(--mint) var(--progress), rgba(255,255,255,.12) 0); position: relative; }
+    .progress-ring::before { content: ""; position: absolute; inset: 7px; border-radius: 50%; background: #17314f; }
+    .progress-ring span { position: relative; z-index: 1; font-size: .88rem; font-weight: 820; }
+
+    .panel {
+      margin-top: 11px;
+      min-height: 0;
+      flex: 1 1 auto;
+      border: 1px solid #dfe6ee;
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-head {
+      padding: 19px 20px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .panel-title { margin: 0; font-size: 1.08rem; letter-spacing: -.02em; }
+    .panel-subtitle { margin-top: 3px; color: var(--muted); font-size: .8rem; }
+
+    .toolbar { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; justify-content: flex-end; }
+
+    .search-box { position: relative; }
+    .search-box svg { position: absolute; left: 12px; top: 50%; width: 17px; height: 17px; color: #8290a4; transform: translateY(-50%); pointer-events: none; }
+    .search-box input {
+      width: min(250px, 32vw);
+      min-height: 42px;
+      padding: 0 12px 0 38px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #f9fbfd;
+      color: var(--ink);
+    }
+
+    .select {
+      min-height: 42px;
+      padding: 0 34px 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #f9fbfd;
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .table-wrap { min-height: 0; flex: 1 1 auto; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
+    table { width: 100%; border-collapse: collapse; }
+    thead { position: sticky; top: 0; z-index: 2; background: #f7f9fc; box-shadow: 0 1px 0 #e4eaf1; }
+    th { padding: 11px 16px; color: #738096; font-size: .71rem; font-weight: 800; letter-spacing: .07em; text-align: left; text-transform: uppercase; white-space: nowrap; }
+    td { padding: 15px 16px; border-top: 1px solid #edf1f5; vertical-align: middle; font-size: .88rem; }
+    tbody tr { transition: background .16s ease; }
+    tbody tr:hover { background: #fbfcfe; }
+    .client-cell { min-width: 180px; }
+    .client-name { font-weight: 780; color: var(--ink); }
+    .client-user { margin-top: 2px; color: var(--muted); font-size: .77rem; }
+    .phone-link { color: #257c65; font-weight: 680; text-decoration: none; white-space: nowrap; }
+    .phone-link:hover { text-decoration: underline; }
+    .money-main { font-weight: 790; white-space: nowrap; }
+    .money-sub { margin-top: 3px; color: var(--muted); font-size: .74rem; white-space: nowrap; }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: .74rem;
+      font-weight: 780;
+      white-space: nowrap;
+    }
+
+    .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .status-ok { color: #147c60; background: var(--mint-soft); }
+    .status-late { color: #b83748; background: var(--red-soft); }
+    .status-partial { color: #996410; background: var(--amber-soft); }
+    .status-inactive { color: #6d7888; background: #edf0f4; }
+
+    .actions-cell { min-width: 232px; }
+    .actions { display: flex; align-items: center; justify-content: flex-end; gap: 7px; }
+    .renew-btn { min-height: 37px; padding: 0 11px; border: 1px solid #c9d5e1; border-radius: 10px; background: #fff; color: var(--navy-900); font-size: .78rem; font-weight: 760; display: inline-flex; align-items: center; gap: 7px; }
+    .renew-btn:hover { border-color: var(--navy-800); background: #f7f9fc; }
+    .icon-btn { width: 37px; height: 37px; padding: 0; border: 1px solid #d8e0e9; border-radius: 10px; display: inline-grid; place-items: center; background: #fff; color: #526176; }
+    .icon-btn:hover { color: var(--blue); border-color: #9fb6ed; background: var(--blue-soft); }
+    .icon-btn.pay-rest { color: #93610f; border-color: #f0ce91; background: var(--amber-soft); }
+    .icon-btn.delete-client { color: #b83748; border-color: #efc3c9; background: var(--red-soft); }
+    .icon-btn.delete-client:hover { color: #fff; border-color: var(--red); background: var(--red); }
+
+    .pagination { min-height: 52px; padding: 8px 14px; border-top: 1px solid #e5ebf2; display: flex; align-items: center; justify-content: flex-end; gap: 10px; background: #fbfcfe; }
+    .pagination[hidden] { display: none; }
+    .pagination-info { min-width: 190px; color: var(--muted); font-size: .77rem; font-weight: 680; text-align: center; }
+    .page-btn { min-height: 35px; padding: 0 11px; border: 1px solid #d5dee8; border-radius: 9px; display: inline-flex; align-items: center; gap: 6px; background: #fff; color: var(--ink); font-size: .77rem; font-weight: 740; }
+    .page-btn:hover:not(:disabled) { border-color: #9fb6ed; background: var(--blue-soft); color: var(--blue); }
+    .page-btn svg { width: 16px; height: 16px; }
+
+    .empty {
+      display: none;
+      padding: 58px 24px 66px;
+      text-align: center;
+    }
+    .empty.show { display: block; }
+    .empty-icon { width: 58px; height: 58px; margin: 0 auto 15px; border-radius: 18px; display: grid; place-items: center; background: var(--blue-soft); color: var(--blue); }
+    .empty-icon svg { width: 28px; height: 28px; }
+    .empty h3 { margin: 0; font-size: 1.05rem; }
+    .empty p { max-width: 420px; margin: 7px auto 18px; color: var(--muted); font-size: .85rem; }
+
+    .skeleton-row td { padding: 17px 16px; }
+    .skeleton { height: 14px; border-radius: 7px; background: linear-gradient(90deg, #eef2f6 25%, #f8fafc 45%, #eef2f6 65%); background-size: 300% 100%; animation: shimmer 1.3s infinite; }
+    @keyframes shimmer { to { background-position: -100% 0; } }
+    .spin { animation: spin .9s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    dialog {
+      width: min(580px, calc(100vw - 28px));
+      max-height: calc(100vh - 28px);
+      margin: auto;
+      padding: 0;
+      border: 0;
+      border-radius: 22px;
+      color: var(--ink);
+      box-shadow: 0 28px 100px rgba(7, 20, 38, .28);
+      overflow: auto;
+    }
+    dialog::backdrop { background: rgba(7, 20, 38, .58); backdrop-filter: blur(3px); }
+    .dialog-head { padding: 22px 23px 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; border-bottom: 1px solid #edf1f5; }
+    .dialog-title { margin: 0; font-size: 1.25rem; letter-spacing: -.025em; }
+    .dialog-note { margin-top: 4px; color: var(--muted); font-size: .8rem; }
+    .close-btn { width: 36px; height: 36px; border: 0; border-radius: 10px; display: grid; place-items: center; background: #f0f3f7; color: #657287; }
+    .close-btn svg { width: 18px; height: 18px; }
+    .dialog-body { padding: 20px 23px 23px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .field { min-width: 0; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { display: block; margin: 0 0 6px; color: #39495e; font-size: .8rem; font-weight: 750; }
+    .field input {
+      width: 100%;
+      min-height: 45px;
+      padding: 0 12px;
+      border: 1px solid #cfdae5;
+      border-radius: 11px;
+      background: #fff;
+      color: var(--ink);
+    }
+    .field input:focus { border-color: var(--blue); outline: 3px solid rgba(55, 108, 231, .13); }
+    .field-help { margin-top: 6px; color: var(--muted); font-size: .73rem; }
+    .check-field { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: #f9fbfd; }
+    .check-field input { width: 18px; height: 18px; accent-color: var(--blue); }
+    .check-field label { font-size: .82rem; font-weight: 700; }
+    .dialog-actions { margin-top: 21px; display: flex; justify-content: flex-end; gap: 9px; }
+
+    .payment-summary { margin-bottom: 17px; padding: 14px; border-radius: 14px; display: flex; justify-content: space-between; gap: 18px; background: var(--blue-soft); }
+    .payment-summary strong { display: block; font-size: .98rem; }
+    .payment-summary span { color: var(--muted); font-size: .75rem; }
+    .payment-balance { text-align: right; }
+    .delete-message { margin: 0; color: #425168; font-size: .91rem; }
+    .delete-message strong { color: var(--ink); }
+    .delete-warning { margin-top: 14px; padding: 12px 13px; border: 1px solid #f2cbd0; border-radius: 12px; background: var(--red-soft); color: #913141; font-size: .8rem; }
+
+    .toast-region { position: fixed; right: 18px; bottom: 18px; z-index: 100; display: grid; gap: 9px; pointer-events: none; }
+    .toast { min-width: min(350px, calc(100vw - 36px)); max-width: 430px; padding: 13px 15px; border: 1px solid #dce4ed; border-radius: 13px; display: flex; align-items: flex-start; gap: 10px; background: #fff; box-shadow: 0 18px 60px rgba(16, 35, 63, .18); color: var(--ink); font-size: .83rem; animation: toast-in .22s ease-out; }
+    .toast svg { width: 18px; height: 18px; flex: 0 0 auto; color: var(--blue); margin-top: 1px; }
+    .toast.error svg { color: var(--red); }
+    @keyframes toast-in { from { transform: translateY(10px); opacity: 0; } }
+
+    .mobile-brand { display: none; }
+
+    @media (max-width: 1120px) {
+      .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 820px) {
+      .app-shell { display: block; }
+      .sidebar { display: none; }
+      .main { padding: 18px 16px 36px; }
+      .mobile-brand { display: flex; align-items: center; gap: 9px; margin-bottom: 18px; color: var(--navy-900); font-weight: 830; }
+      .mobile-brand .brand-mark { width: 34px; height: 34px; border-radius: 10px; }
+      .topbar { display: block; }
+      .top-actions { margin-top: 16px; justify-content: flex-start; }
+      .sync-strip { align-items: flex-start; flex-direction: column; }
+      .month-control { width: 100%; justify-content: space-between; }
+      .panel-head { align-items: flex-start; flex-direction: column; }
+      .toolbar { width: 100%; justify-content: stretch; }
+      .search-box { flex: 1 1 100%; }
+      .search-box input { width: 100%; }
+      .select { flex: 1; }
+      .toolbar .btn { flex: 1; }
+    }
+
+    @media (max-width: 680px) {
+      body { height: auto; min-height: 125vh; overflow: auto; }
+      .app-shell, .main { height: auto; min-height: 125vh; overflow: visible; }
+      .panel { min-height: 420px; }
+      .summary-grid { grid-template-columns: 1fr; }
+      .metric-card, .progress-card { min-height: 112px; }
+      .top-actions .btn { flex: 1 1 calc(50% - 5px); padding-inline: 10px; }
+      .table-wrap { max-height: 70vh; overflow: auto; }
+      table, tbody { display: block; }
+      thead { display: none; }
+      tbody { padding: 0 13px 15px; }
+      tbody tr { display: grid; grid-template-columns: 1fr 1fr; gap: 13px 18px; margin-top: 11px; padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: #fff; }
+      tbody tr:hover { background: #fff; }
+      td { display: block; padding: 0; border: 0; font-size: .85rem; }
+      td::before { content: attr(data-label); display: block; margin-bottom: 4px; color: #7b8798; font-size: .68rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+      .client-cell, .actions-cell { grid-column: 1 / -1; min-width: 0; }
+      .actions { justify-content: stretch; }
+      .renew-btn { flex: 1; justify-content: center; }
+      .form-grid { grid-template-columns: 1fr; }
+      .field.full, .check-field { grid-column: auto; }
+      .dialog-actions .btn { flex: 1; }
+      .pagination { justify-content: center; flex-wrap: wrap; }
+      .pagination-info { order: -1; flex: 1 1 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <section class="login-screen" id="loginScreen" aria-labelledby="loginTitle">
+    <div class="login-card">
+      <div class="login-mark" data-icon="lock" aria-hidden="true"></div>
+      <h1 id="loginTitle">Acesso ao Mensalista</h1>
+      <p>Digite sua senha para abrir o controle de clientes.</p>
+      <form id="loginForm">
+        <div class="login-field"><label for="loginPassword">Senha</label><input id="loginPassword" type="password" inputmode="numeric" autocomplete="current-password" required autofocus placeholder="Digite a senha"></div>
+        <div class="login-error" id="loginError" role="alert" aria-live="polite"></div>
+        <button class="btn btn-primary login-submit" type="submit"><span data-icon="lock"></span>Entrar</button>
+      </form>
+      <div class="login-security"><span data-icon="shield"></span>A senha não fica gravada em texto no arquivo.</div>
+    </div>
+  </section>
+
+  <div class="app-shell" id="appShell" hidden>
+    <aside class="sidebar" aria-label="Navegação principal">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true" data-icon="calendar"></div>
+        <div>
+          <div class="brand-name">Mensalista</div>
+          <div class="brand-note">Controle financeiro</div>
+        </div>
+      </div>
+
+      <div class="nav-label">Painel</div>
+      <a class="nav-item" href="#clientes"><span data-icon="layout"></span> Visão geral</a>
+
+      <div class="source-card">
+        <div class="source-head"><span class="source-dot" id="sourceDot"></span><span id="sourceStatus">Conectando ao JSON</span></div>
+        <div class="source-meta" id="sourceMeta">Aguardando a primeira atualização</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="mobile-brand">
+        <div class="brand-mark" aria-hidden="true" data-icon="calendar"></div>
+        Mensalista
+      </div>
+
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">Resumo da carteira</div>
+          <h1>Controle de clientes</h1>
+        </div>
+        <div class="top-actions" aria-label="Ações do arquivo">
+          <button class="btn" type="button" id="installBtn" title="Instalar como aplicativo"><span data-icon="install"></span><span>Instalar app</span></button>
+          <button class="btn" type="button" id="refreshBtn"><span data-icon="refresh"></span><span>Atualizar</span></button>
+          <button class="btn" type="button" id="copyBtn"><span data-icon="copy"></span><span>Copiar JSON</span></button>
+          <button class="btn btn-primary" type="button" id="downloadBtn"><span data-icon="download"></span><span>Baixar JSON</span></button>
+        </div>
+      </header>
+
+      <div class="sync-strip">
+        <div class="sync-message"><span data-icon="cloud"></span><span id="syncText">Carregando dados do GitHub…</span><span class="dirty-pill" id="dirtyPill">Alterações não exportadas</span></div>
+        <label class="month-control" for="monthSelect">Mês de referência <input class="month-input" type="month" id="monthSelect"></label>
+      </div>
+
+      <section class="summary-grid" aria-label="Resumo financeiro">
+        <article class="metric-card" style="--accent:var(--blue);--accent-soft:var(--blue-soft)">
+          <div class="metric-top"><span class="metric-label">Clientes ativos</span><span class="metric-icon" data-icon="users"></span></div>
+          <div class="metric-value" id="activeValue">—</div>
+          <div class="metric-caption" id="activeCaption">na carteira atual</div>
+        </article>
+
+        <article class="metric-card" style="--accent:#168864;--accent-soft:var(--mint-soft)">
+          <div class="metric-top"><span class="metric-label">Recebido no mês</span><span class="metric-icon" data-icon="arrowDown"></span></div>
+          <div class="metric-value" id="receivedValue">—</div>
+          <div class="metric-caption" id="receivedCaption">pagamentos registrados</div>
+        </article>
+
+        <article class="metric-card" style="--accent:#c57b10;--accent-soft:var(--amber-soft)">
+          <div class="metric-top"><span class="metric-label">Ainda a receber</span><span class="metric-icon" data-icon="clock"></span></div>
+          <div class="metric-value" id="remainingValue">—</div>
+          <div class="metric-caption" id="remainingCaption">saldo aberto no mês</div>
+        </article>
+
+        <article class="progress-card">
+          <div class="progress-copy">
+            <div class="metric-label">Progresso mensal</div>
+            <div class="progress-value" id="progressValue">R$ 0 de R$ 0</div>
+            <div class="progress-caption">considerando os clientes ativos</div>
+          </div>
+          <div class="progress-ring" id="progressRing" aria-label="0% recebido"><span id="progressPercent">0%</span></div>
+        </article>
+      </section>
+
+      <section class="panel" id="clientes">
+        <div class="panel-head">
+          <div>
+            <h2 class="panel-title">Clientes</h2>
+            <div class="panel-subtitle" id="listSubtitle">Acompanhe mensalidades e vencimentos.</div>
+          </div>
+          <div class="toolbar">
+            <label class="search-box" aria-label="Buscar cliente"><span data-icon="search"></span><input type="search" id="searchInput" placeholder="Buscar nome ou usuário"></label>
+            <select class="select" id="statusFilter" aria-label="Filtrar por situação">
+              <option value="todos">Todas as situações</option>
+              <option value="em-dia">Em dia</option>
+              <option value="vencido">Vencidos</option>
+              <option value="parcial">Parcial em aberto</option>
+              <option value="inativo">Inativos</option>
+            </select>
+            <button class="btn btn-mint" type="button" id="addBtn"><span data-icon="plus"></span>Adicionar cliente</button>
+          </div>
+        </div>
+
+        <div class="table-wrap" id="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>WhatsApp</th>
+                <th>Mensalidade</th>
+                <th>Vencimento</th>
+                <th>Situação</th>
+                <th>Recebido / saldo</th>
+                <th><span class="sr-only">Ações</span></th>
+              </tr>
+            </thead>
+            <tbody id="clientRows"></tbody>
+          </table>
+        </div>
+
+        <div class="empty" id="emptyState">
+          <div class="empty-icon" data-icon="users"></div>
+          <h3 id="emptyTitle">Nenhum cliente cadastrado</h3>
+          <p id="emptyText">Adicione o primeiro cliente para começar a acompanhar as mensalidades.</p>
+          <button class="btn btn-primary" type="button" id="emptyAddBtn"><span data-icon="plus"></span>Adicionar cliente</button>
+        </div>
+
+        <nav class="pagination" id="pagination" aria-label="Paginação dos clientes" hidden>
+          <button class="page-btn" type="button" id="prevPageBtn"><span data-icon="chevronLeft"></span>Anterior</button>
+          <span class="pagination-info" id="pageInfo" aria-live="polite">Página 1 de 1</span>
+          <button class="page-btn" type="button" id="nextPageBtn">Próxima<span data-icon="chevronRight"></span></button>
+        </nav>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="clientDialog" aria-labelledby="clientDialogTitle">
+    <form id="clientForm">
+      <div class="dialog-head">
+        <div><h2 class="dialog-title" id="clientDialogTitle">Novo cliente</h2><div class="dialog-note">Os dados ficarão prontos para exportar no JSON.</div></div>
+        <button class="close-btn" type="button" data-close="clientDialog" aria-label="Fechar"><span data-icon="x"></span></button>
+      </div>
+      <div class="dialog-body">
+        <input type="hidden" id="clientId">
+        <div class="form-grid">
+          <div class="field full"><label for="clientName">Nome</label><input id="clientName" name="nome" autocomplete="name" required maxlength="120" placeholder="Nome do cliente"></div>
+          <div class="field"><label for="clientUser">Usuário</label><input id="clientUser" name="usuario" autocomplete="username" maxlength="80" placeholder="Ex.: maria.silva"></div>
+          <div class="field"><label for="clientPhone">WhatsApp</label><input id="clientPhone" name="whatsapp" autocomplete="tel" inputmode="tel" maxlength="24" placeholder="(11) 99999-9999"></div>
+          <div class="field"><label for="clientFee">Mensalidade</label><input id="clientFee" name="mensalidade" type="number" inputmode="decimal" min="0.01" step="0.01" required placeholder="0,00"><div class="field-help">Este será o valor padrão nas renovações.</div></div>
+          <div class="field"><label for="clientDue">Dia do vencimento</label><input id="clientDue" name="vencimento" type="number" inputmode="numeric" min="1" max="31" required placeholder="10"><div class="field-help">De 1 a 31; meses menores são ajustados automaticamente.</div></div>
+          <div class="check-field"><input type="checkbox" id="clientActive" checked><label for="clientActive">Cliente ativo e incluído nos totais mensais</label></div>
+        </div>
+        <div class="dialog-actions"><button class="btn" type="button" data-close="clientDialog">Cancelar</button><button class="btn btn-primary" type="submit">Salvar cliente</button></div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="paymentDialog" aria-labelledby="paymentDialogTitle">
+    <form id="paymentForm">
+      <div class="dialog-head">
+        <div><h2 class="dialog-title" id="paymentDialogTitle">Renovar mensalidade</h2><div class="dialog-note" id="paymentDialogNote">O valor recebido pode ser menor que a mensalidade.</div></div>
+        <button class="close-btn" type="button" data-close="paymentDialog" aria-label="Fechar"><span data-icon="x"></span></button>
+      </div>
+      <div class="dialog-body">
+        <input type="hidden" id="paymentClientId">
+        <div class="payment-summary"><div><strong id="paymentClientName">Cliente</strong><span id="paymentFeeText">Mensalidade: R$ 0,00</span></div><div class="payment-balance"><strong id="paymentBalanceText">R$ 0,00</strong><span>em aberto na competência</span></div></div>
+        <div class="form-grid">
+          <div class="field"><label for="paymentMonth">Competência</label><input id="paymentMonth" type="month" required></div>
+          <div class="field" id="paymentDebtField" hidden><label for="paymentDebt">Valor em aberto</label><input id="paymentDebt" type="number" inputmode="decimal" min="0" step="0.01"><div class="field-help">Pode incluir dívidas anteriores sem alterar a mensalidade fixa.</div></div>
+          <div class="field"><label for="paymentAmount">Valor recebido agora</label><input id="paymentAmount" type="number" inputmode="decimal" min="0" step="0.01" required><div class="field-help" id="paymentAmountHelp" hidden>Deixe 0 para somente salvar a dívida.</div></div>
+          <div class="field full"><label for="paymentDate">Data do pagamento</label><input id="paymentDate" type="date" required></div>
+        </div>
+        <div class="dialog-actions"><button class="btn" type="button" data-close="paymentDialog">Cancelar</button><button class="btn btn-primary" type="submit" id="paymentSubmitBtn">Registrar pagamento</button></div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="deleteDialog" aria-labelledby="deleteDialogTitle">
+    <form id="deleteForm">
+      <div class="dialog-head">
+        <div><h2 class="dialog-title" id="deleteDialogTitle">Excluir cliente?</h2><div class="dialog-note">Confira antes de continuar.</div></div>
+        <button class="close-btn" type="button" data-close="deleteDialog" aria-label="Fechar"><span data-icon="x"></span></button>
+      </div>
+      <div class="dialog-body">
+        <input type="hidden" id="deleteClientId">
+        <p class="delete-message">Você está prestes a excluir <strong id="deleteClientName">este cliente</strong>.</p>
+        <div class="delete-warning">O cadastro e todo o histórico de pagamentos serão removidos do próximo JSON exportado.</div>
+        <div class="dialog-actions"><button class="btn" type="button" data-close="deleteDialog" id="deleteCancelBtn">Cancelar</button><button class="btn btn-danger-solid" type="submit"><span data-icon="trash"></span>Excluir cliente</button></div>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const REMOTE_URL = 'https://tvonplus.github.io/mensalista/clientes.json';
+      const CACHE_KEY = 'mensalista-cache-v1';
+      const AUTH_SESSION_KEY = 'mensalista-authenticated';
+      const PASSWORD_SALT = 'mensalista-v3-2026';
+      const PASSWORD_VERIFIER = '7e16fa4a3907cd7b66df21ba2b9e25eb55e67cb022e4641c1da649a589567345';
+      const CLIENTS_PER_PAGE = 25;
+      const localDateISO = (date = new Date()) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      const todayISO = localDateISO();
+      const currentMonth = todayISO.slice(0, 7);
+      const state = {
+        clients: [],
+        month: currentMonth,
+        query: '',
+        filter: 'todos',
+        page: 1,
+        dirty: false,
+        loading: true,
+        source: 'remote',
+        lastSync: null
+      };
+
+      const $ = (selector) => document.querySelector(selector);
+      const els = {
+        loginScreen: $('#loginScreen'), loginForm: $('#loginForm'), loginPassword: $('#loginPassword'), loginError: $('#loginError'), appShell: $('#appShell'),
+        rows: $('#clientRows'), tableWrap: $('#tableWrap'), empty: $('#emptyState'),
+        emptyTitle: $('#emptyTitle'), emptyText: $('#emptyText'), listSubtitle: $('#listSubtitle'),
+        activeValue: $('#activeValue'), activeCaption: $('#activeCaption'),
+        receivedValue: $('#receivedValue'), receivedCaption: $('#receivedCaption'),
+        remainingValue: $('#remainingValue'), remainingCaption: $('#remainingCaption'),
+        progressValue: $('#progressValue'), progressPercent: $('#progressPercent'), progressRing: $('#progressRing'),
+        installBtn: $('#installBtn'), refreshBtn: $('#refreshBtn'), copyBtn: $('#copyBtn'), downloadBtn: $('#downloadBtn'), addBtn: $('#addBtn'), emptyAddBtn: $('#emptyAddBtn'),
+        pagination: $('#pagination'), prevPageBtn: $('#prevPageBtn'), nextPageBtn: $('#nextPageBtn'), pageInfo: $('#pageInfo'),
+        monthSelect: $('#monthSelect'), searchInput: $('#searchInput'), statusFilter: $('#statusFilter'),
+        syncText: $('#syncText'), dirtyPill: $('#dirtyPill'), sourceDot: $('#sourceDot'), sourceStatus: $('#sourceStatus'), sourceMeta: $('#sourceMeta'),
+        clientDialog: $('#clientDialog'), clientForm: $('#clientForm'), clientDialogTitle: $('#clientDialogTitle'),
+        clientId: $('#clientId'), clientName: $('#clientName'), clientUser: $('#clientUser'), clientPhone: $('#clientPhone'), clientFee: $('#clientFee'), clientDue: $('#clientDue'), clientActive: $('#clientActive'),
+        paymentDialog: $('#paymentDialog'), paymentForm: $('#paymentForm'), paymentDialogTitle: $('#paymentDialogTitle'), paymentDialogNote: $('#paymentDialogNote'),
+        paymentClientId: $('#paymentClientId'), paymentClientName: $('#paymentClientName'), paymentFeeText: $('#paymentFeeText'), paymentBalanceText: $('#paymentBalanceText'), paymentMonth: $('#paymentMonth'), paymentDebtField: $('#paymentDebtField'), paymentDebt: $('#paymentDebt'), paymentAmount: $('#paymentAmount'), paymentAmountHelp: $('#paymentAmountHelp'), paymentDate: $('#paymentDate'), paymentSubmitBtn: $('#paymentSubmitBtn'),
+        deleteDialog: $('#deleteDialog'), deleteForm: $('#deleteForm'), deleteClientId: $('#deleteClientId'), deleteClientName: $('#deleteClientName'), deleteCancelBtn: $('#deleteCancelBtn'),
+        toastRegion: $('#toastRegion')
+      };
+
+      const iconPaths = {
+        calendar: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M16 3v4M8 3v4M3 10h18"/>',
+        layout: '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/>',
+        refresh: '<path d="M20 6v5h-5"/><path d="M4 18v-5h5"/><path d="M6.1 9A7 7 0 0 1 18 6l2 5M4 13l2 5a7 7 0 0 0 11.9-3"/>',
+        copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/>',
+        download: '<path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/>',
+        cloud: '<path d="M17.5 19H6a4 4 0 0 1-.4-8 6.5 6.5 0 0 1 12.5-1.7A4.8 4.8 0 0 1 17.5 19Z"/>',
+        users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+        arrowDown: '<path d="M12 3v18M18 15l-6 6-6-6"/>',
+        clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+        search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
+        plus: '<path d="M12 5v14M5 12h14"/>',
+        edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>',
+        trash: '<path d="M3 6h18M8 6V4h8v2M19 6l-1 15H6L5 6M10 11v6M14 11v6"/>',
+        chevronLeft: '<path d="m15 18-6-6 6-6"/>',
+        chevronRight: '<path d="m9 18 6-6-6-6"/>',
+        wallet: '<path d="M4 6h15a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3h13v3"/><path d="M16 12h5"/>',
+        install: '<path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/>',
+        lock: '<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+        shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/>',
+        x: '<path d="M18 6 6 18M6 6l12 12"/>',
+        check: '<path d="m5 12 4 4L19 6"/>',
+        alert: '<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/>'
+      };
+
+      function icon(name) {
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${iconPaths[name] || ''}</svg>`;
+      }
+
+      document.querySelectorAll('[data-icon]').forEach((node) => { node.innerHTML = icon(node.dataset.icon); });
+
+      function escapeHTML(value) {
+        return String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]);
+      }
+
+      function uid() {
+        return (crypto.randomUUID ? crypto.randomUUID() : `cliente-${Date.now()}-${Math.random().toString(16).slice(2)}`);
+      }
+
+      function numberFrom(value, fallback = 0) {
+        if (typeof value === 'string') value = value.replace(/\s/g, '').replace(',', '.');
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : fallback;
+      }
+
+      function money(value) {
+        return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(numberFrom(value));
+      }
+
+      function monthLabel(month) {
+        if (!/^\d{4}-\d{2}$/.test(month)) return month;
+        const [year, monthNumber] = month.split('-').map(Number);
+        return new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(new Date(year, monthNumber - 1, 1));
+      }
+
+      function normalizePayments(raw, client) {
+        const payments = {};
+        const write = (month, amount, date, dueAmount = null) => {
+          if (!/^\d{4}-\d{2}$/.test(String(month || ''))) return;
+          const value = Math.max(0, numberFrom(amount));
+          const previous = payments[month]?.pago || 0;
+          const record = { pago: Math.round((previous + value) * 100) / 100, atualizadoEm: date || new Date().toISOString() };
+          const previousDue = payments[month]?.valorDevido;
+          const normalizedDue = dueAmount == null ? previousDue : Math.max(0, numberFrom(dueAmount));
+          if (normalizedDue != null) record.valorDevido = Math.round(normalizedDue * 100) / 100;
+          payments[month] = record;
+        };
+
+        if (Array.isArray(raw)) {
+          raw.forEach((payment) => write(payment.competencia || payment.mes || payment.referencia, payment.valor ?? payment.pago ?? payment.valorPago, payment.atualizadoEm || payment.data, payment.valorDevido ?? payment.valorCobrado));
+        } else if (raw && typeof raw === 'object') {
+          Object.entries(raw).forEach(([month, payment]) => {
+            if (typeof payment === 'number' || typeof payment === 'string') write(month, payment);
+            else if (payment && typeof payment === 'object') write(month, payment.pago ?? payment.valor ?? payment.valorPago, payment.atualizadoEm || payment.data, payment.valorDevido ?? payment.valorCobrado);
+          });
+        }
+
+        if (!Object.keys(payments).length) {
+          const legacyValue = client.valorPagoMes ?? client.valor_pago_mes ?? client.valorPago ?? (typeof client.pago === 'number' ? client.pago : null);
+          if (legacyValue != null) write(client.competencia || client.mes || currentMonth, legacyValue, client.atualizadoEm);
+          else if (client.pago === true) write(client.competencia || client.mes || currentMonth, client.mensalidade ?? client.valorMensalidade ?? client.valor, client.atualizadoEm);
+        }
+        return payments;
+      }
+
+      function normalizeData(payload) {
+        const root = Array.isArray(payload) ? { clientes: payload } : (payload && typeof payload === 'object' ? payload : { clientes: [] });
+        const rawClients = Array.isArray(root.clientes) ? root.clientes : (Array.isArray(root.clients) ? root.clients : []);
+        return rawClients.map((client) => {
+          const dueRaw = client.vencimento ?? client.diaVencimento ?? client.dia_vencimento ?? 10;
+          const due = typeof dueRaw === 'string' && /^\d{4}-\d{2}-\d{2}/.test(dueRaw) ? Number(dueRaw.slice(8, 10)) : numberFrom(dueRaw, 10);
+          const fee = Math.max(0, numberFrom(client.mensalidade ?? client.valorMensalidade ?? client.valor_mensalidade ?? client.valor));
+          return {
+            id: String(client.id || uid()),
+            nome: String(client.nome ?? client.name ?? '').trim() || 'Cliente sem nome',
+            usuario: String(client.usuario ?? client.user ?? client.username ?? '').trim(),
+            whatsapp: String(client.whatsapp ?? client.telefone ?? client.phone ?? '').trim(),
+            mensalidade: Math.round(fee * 100) / 100,
+            vencimento: Math.max(1, Math.min(31, Math.round(due))),
+            ativo: client.ativo !== false && String(client.situacao || client.status || '').toLowerCase() !== 'inativo',
+            pagamentos: normalizePayments(client.pagamentos, client)
+          };
+        }).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+      }
+
+      function exportData() {
+        return {
+          versao: 1,
+          atualizadoEm: new Date().toISOString(),
+          clientes: state.clients.map((client) => ({
+            id: client.id,
+            nome: client.nome,
+            usuario: client.usuario,
+            whatsapp: client.whatsapp,
+            mensalidade: client.mensalidade,
+            vencimento: client.vencimento,
+            ativo: client.ativo,
+            pagamentos: Object.fromEntries(Object.entries(client.pagamentos || {}).sort(([a], [b]) => a.localeCompare(b)))
+          }))
+        };
+      }
+
+      function getRawPaid(client, month = state.month) {
+        return Math.max(0, numberFrom(client.pagamentos?.[month]?.pago));
+      }
+
+      function getDue(client, month = state.month) {
+        const payment = client.pagamentos?.[month];
+        const rawPaid = getRawPaid(client, month);
+        const customDue = payment?.valorDevido;
+        return Math.max(rawPaid, customDue == null ? client.mensalidade : Math.max(0, numberFrom(customDue)));
+      }
+
+      function getPaid(client, month = state.month) {
+        return Math.min(getDue(client, month), getRawPaid(client, month));
+      }
+
+      function getDueDate(month, day) {
+        const [year, monthNumber] = month.split('-').map(Number);
+        const lastDay = new Date(year, monthNumber, 0).getDate();
+        return new Date(year, monthNumber - 1, Math.min(day, lastDay), 23, 59, 59);
+      }
+
+      function getStatus(client, month = state.month) {
+        if (!client.ativo) return 'inativo';
+        const paid = getPaid(client, month);
+        const due = getDue(client, month);
+        if (paid > 0 && paid < due) return 'parcial';
+        if (paid >= due) return 'em-dia';
+        return new Date() > getDueDate(month, client.vencimento) ? 'vencido' : 'em-dia';
+      }
+
+      function statusLabel(status, client, month = state.month) {
+        if (status === 'inativo') return 'Inativo';
+        if (status === 'parcial') return 'Parcial em aberto';
+        if (status === 'vencido') return 'Vencido';
+        return getPaid(client, month) >= getDue(client, month) ? 'Em dia · pago' : 'Em dia';
+      }
+
+      function statusClass(status) {
+        return status === 'em-dia' ? 'ok' : status === 'vencido' ? 'late' : status === 'parcial' ? 'partial' : status === 'inativo' ? 'inactive' : status;
+      }
+
+      function nextMonth(month) {
+        const [year, monthNumber] = month.split('-').map(Number);
+        const next = new Date(year, monthNumber, 1);
+        return `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, '0')}`;
+      }
+
+      function visibleClients() {
+        const query = state.query.trim().toLocaleLowerCase('pt-BR');
+        const priority = { vencido: 0, parcial: 1, 'em-dia': 2, inativo: 3 };
+        return state.clients.filter((client) => {
+          const matchesText = !query || `${client.nome} ${client.usuario} ${client.whatsapp}`.toLocaleLowerCase('pt-BR').includes(query);
+          const matchesStatus = state.filter === 'todos' || getStatus(client) === state.filter;
+          return matchesText && matchesStatus;
+        }).sort((a, b) => {
+          const statusOrder = (priority[getStatus(a)] ?? 9) - (priority[getStatus(b)] ?? 9);
+          if (statusOrder) return statusOrder;
+          const dueOrder = a.vencimento - b.vencimento;
+          if (dueOrder) return dueOrder;
+          return a.nome.localeCompare(b.nome, 'pt-BR');
+        });
+      }
+
+      function renderSummary() {
+        const active = state.clients.filter((client) => client.ativo);
+        const total = active.reduce((sum, client) => sum + getDue(client), 0);
+        const received = active.reduce((sum, client) => sum + getPaid(client), 0);
+        const remaining = Math.max(0, total - received);
+        const percent = total > 0 ? Math.min(100, Math.round((received / total) * 100)) : 0;
+        const fullyPaid = active.filter((client) => getPaid(client) >= getDue(client)).length;
+        const overdue = active.filter((client) => getStatus(client) === 'vencido').length;
+
+        els.activeValue.textContent = String(active.length);
+        els.activeCaption.textContent = active.length === 1 ? 'cliente ativo na carteira' : 'clientes ativos na carteira';
+        els.receivedValue.textContent = money(received);
+        els.receivedCaption.textContent = `${fullyPaid} ${fullyPaid === 1 ? 'mensalidade quitada' : 'mensalidades quitadas'}`;
+        els.remainingValue.textContent = money(remaining);
+        els.remainingCaption.textContent = overdue ? `${overdue} ${overdue === 1 ? 'cliente vencido' : 'clientes vencidos'}` : 'nenhum vencimento em atraso';
+        els.progressValue.textContent = `${money(received)} de ${money(total)}`;
+        els.progressPercent.textContent = `${percent}%`;
+        els.progressRing.style.setProperty('--progress', `${percent * 3.6}deg`);
+        els.progressRing.setAttribute('aria-label', `${percent}% recebido`);
+      }
+
+      function renderRows() {
+        if (state.loading) {
+          els.pagination.hidden = true;
+          els.rows.innerHTML = Array.from({ length: 4 }, () => `<tr class="skeleton-row">${Array.from({ length: 7 }, (_, i) => `<td><div class="skeleton" style="width:${i === 0 ? 82 : 64}%"></div></td>`).join('')}</tr>`).join('');
+          els.tableWrap.hidden = false;
+          els.empty.classList.remove('show');
+          return;
+        }
+
+        const clients = visibleClients();
+        const totalPages = Math.max(1, Math.ceil(clients.length / CLIENTS_PER_PAGE));
+        state.page = Math.max(1, Math.min(state.page, totalPages));
+        const start = (state.page - 1) * CLIENTS_PER_PAGE;
+        const pageClients = clients.slice(start, start + CLIENTS_PER_PAGE);
+        const end = start + pageClients.length;
+        els.listSubtitle.textContent = `${clients.length} ${clients.length === 1 ? 'cliente encontrado' : 'clientes encontrados'} · 25 por página · ${monthLabel(state.month)}`;
+        els.tableWrap.hidden = clients.length === 0;
+        els.empty.classList.toggle('show', clients.length === 0);
+        els.pagination.hidden = clients.length === 0;
+        if (!clients.length) {
+          const filtering = state.query || state.filter !== 'todos';
+          els.emptyTitle.textContent = filtering ? 'Nenhum resultado encontrado' : 'Nenhum cliente cadastrado';
+          els.emptyText.textContent = filtering ? 'Tente mudar a busca ou a situação selecionada.' : 'Adicione o primeiro cliente para começar a acompanhar as mensalidades.';
+          els.emptyAddBtn.hidden = filtering;
+          els.rows.innerHTML = '';
+          return;
+        }
+
+        els.prevPageBtn.disabled = state.page === 1;
+        els.nextPageBtn.disabled = state.page === totalPages;
+        els.pageInfo.textContent = `${start + 1}–${end} de ${clients.length} · Página ${state.page} de ${totalPages}`;
+
+        els.rows.innerHTML = pageClients.map((client) => {
+          const paid = getPaid(client);
+          const remaining = Math.max(0, getDue(client) - paid);
+          const status = getStatus(client);
+          const rawPhoneDigits = client.whatsapp.replace(/\D/g, '');
+          const phoneDigits = rawPhoneDigits.length === 10 || rawPhoneDigits.length === 11 ? `55${rawPhoneDigits}` : rawPhoneDigits;
+          const phone = client.whatsapp
+            ? (phoneDigits ? `<a class="phone-link" href="https://wa.me/${escapeHTML(phoneDigits)}" target="_blank" rel="noopener noreferrer" aria-label="Abrir WhatsApp de ${escapeHTML(client.nome)}">${escapeHTML(client.whatsapp)}</a>` : escapeHTML(client.whatsapp))
+            : '<span class="client-user">Não informado</span>';
+          const dueDate = getDueDate(state.month, client.vencimento);
+          const dueText = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short' }).format(dueDate).replace('.', '');
+          const canPayRest = client.ativo && remaining > 0;
+          return `<tr>
+            <td class="client-cell" data-label="Cliente"><div class="client-name">${escapeHTML(client.nome)}</div><div class="client-user">${client.usuario ? `@${escapeHTML(client.usuario.replace(/^@/, ''))}` : 'Sem usuário'}</div></td>
+            <td data-label="WhatsApp">${phone}</td>
+            <td data-label="Mensalidade"><div class="money-main">${money(client.mensalidade)}</div></td>
+            <td data-label="Vencimento"><div class="money-main">${escapeHTML(dueText)}</div><div class="money-sub">dia ${client.vencimento}</div></td>
+            <td data-label="Situação"><span class="status status-${statusClass(status)}">${statusLabel(status, client)}</span></td>
+            <td data-label="Recebido / saldo"><div class="money-main">${money(paid)} recebido</div><div class="money-sub">${remaining > 0 ? `${money(remaining)} em aberto` : 'sem saldo pendente'}</div></td>
+            <td class="actions-cell" data-label="Ações"><div class="actions">
+              ${client.ativo ? `<button class="renew-btn" type="button" data-action="renew" data-id="${escapeHTML(client.id)}">${icon('refresh')} Renovar</button>` : ''}
+              ${canPayRest ? `<button class="icon-btn pay-rest" type="button" data-action="rest" data-id="${escapeHTML(client.id)}" title="Ajustar ou pagar saldo" aria-label="Ajustar ou pagar o saldo de ${escapeHTML(client.nome)}">${icon('wallet')}</button>` : ''}
+              <button class="icon-btn" type="button" data-action="edit" data-id="${escapeHTML(client.id)}" title="Editar cliente" aria-label="Editar ${escapeHTML(client.nome)}">${icon('edit')}</button>
+              <button class="icon-btn delete-client" type="button" data-action="delete" data-id="${escapeHTML(client.id)}" title="Excluir cliente" aria-label="Excluir ${escapeHTML(client.nome)}">${icon('trash')}</button>
+            </div></td>
+          </tr>`;
+        }).join('');
+      }
+
+      function renderSource() {
+        els.dirtyPill.classList.toggle('show', state.dirty);
+        if (state.loading) {
+          els.syncText.textContent = 'Carregando dados do GitHub…';
+          els.sourceStatus.textContent = 'Conectando ao JSON';
+          els.sourceMeta.textContent = 'Aguardando a primeira atualização';
+          els.sourceDot.className = 'source-dot';
+          return;
+        }
+        const time = state.lastSync ? new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' }).format(state.lastSync) : null;
+        if (state.source === 'remote') {
+          els.sourceStatus.textContent = 'JSON conectado';
+          els.sourceMeta.textContent = time ? `Última leitura às ${time}` : 'Arquivo remoto carregado';
+          els.syncText.textContent = time ? `Dados lidos do GitHub às ${time}.` : 'Dados lidos do GitHub.';
+          els.sourceDot.className = 'source-dot ok';
+        } else if (state.source === 'cache') {
+          els.sourceStatus.textContent = 'Usando cópia local';
+          els.sourceMeta.textContent = 'O arquivo remoto não respondeu';
+          els.syncText.textContent = 'Sem acesso ao GitHub. Exibindo a última cópia salva neste navegador.';
+          els.sourceDot.className = 'source-dot error';
+        } else {
+          els.sourceStatus.textContent = 'Modo local';
+          els.sourceMeta.textContent = 'Comece adicionando clientes';
+          els.syncText.textContent = 'O JSON remoto está indisponível. Você pode trabalhar e baixar um novo arquivo.';
+          els.sourceDot.className = 'source-dot error';
+        }
+      }
+
+      function render() {
+        renderSummary();
+        renderRows();
+        renderSource();
+      }
+
+      function persistCache() {
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify(exportData())); } catch (_) {}
+      }
+
+      function markDirty(message) {
+        state.dirty = true;
+        persistCache();
+        render();
+        if (message) toast(message);
+      }
+
+      function toast(message, type = 'success') {
+        const node = document.createElement('div');
+        node.className = `toast ${type}`;
+        node.innerHTML = `${icon(type === 'error' ? 'alert' : 'check')}<span>${escapeHTML(message)}</span>`;
+        els.toastRegion.appendChild(node);
+        window.setTimeout(() => node.remove(), 4200);
+      }
+
+      async function loadRemote(manual = false) {
+        if (manual && state.dirty && !window.confirm('Você tem alterações ainda não exportadas. Atualizar substituirá os dados atuais pelo arquivo do GitHub. Continuar?')) return;
+        state.loading = true;
+        render();
+        els.refreshBtn.disabled = true;
+        const refreshIcon = els.refreshBtn.querySelector('svg');
+        if (refreshIcon) refreshIcon.classList.add('spin');
+        try {
+          const response = await fetch(`${REMOTE_URL}?t=${Date.now()}`, { cache: 'no-store' });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const text = await response.text();
+          const payload = text.trim() ? JSON.parse(text) : { clientes: [] };
+          state.clients = normalizeData(payload);
+          state.source = 'remote';
+          state.lastSync = new Date();
+          state.dirty = false;
+          persistCache();
+          if (manual) toast('Dados atualizados a partir do GitHub.');
+        } catch (error) {
+          let cached = null;
+          try { cached = JSON.parse(localStorage.getItem(CACHE_KEY)); } catch (_) {}
+          state.clients = cached ? normalizeData(cached) : [];
+          state.source = cached ? 'cache' : 'local';
+          state.lastSync = null;
+          if (manual) toast(cached ? 'Não foi possível ler o GitHub. A última cópia local foi mantida.' : 'Não foi possível ler o arquivo remoto.', 'error');
+        } finally {
+          state.loading = false;
+          els.refreshBtn.disabled = false;
+          if (refreshIcon) refreshIcon.classList.remove('spin');
+          render();
+        }
+      }
+
+      function openClientDialog(client = null) {
+        els.clientForm.reset();
+        els.clientId.value = client?.id || '';
+        els.clientName.value = client?.nome || '';
+        els.clientUser.value = client?.usuario || '';
+        els.clientPhone.value = client?.whatsapp || '';
+        els.clientFee.value = client?.mensalidade ?? '';
+        els.clientDue.value = client?.vencimento ?? 10;
+        els.clientActive.checked = client ? client.ativo : true;
+        els.clientDialogTitle.textContent = client ? 'Editar cliente' : 'Novo cliente';
+        els.clientDialog.showModal();
+        requestAnimationFrame(() => els.clientName.focus());
+      }
+
+      function updatePaymentSummary() {
+        const client = state.clients.find((item) => item.id === els.paymentClientId.value);
+        if (!client) return;
+        const month = els.paymentMonth.value || state.month;
+        const remaining = Math.max(0, getDue(client, month) - getPaid(client, month));
+        els.paymentBalanceText.textContent = money(remaining);
+        if (els.paymentForm.dataset.mode === 'saldo') {
+          els.paymentDebt.value = remaining.toFixed(2);
+          els.paymentDebt.dataset.previous = remaining.toFixed(2);
+        }
+        els.paymentAmount.min = '0';
+        els.paymentAmount.max = String(remaining || getDue(client, month));
+        els.paymentAmount.value = els.paymentForm.dataset.mode === 'saldo' ? '0.00' : remaining.toFixed(2);
+        updatePaymentSubmitLabel();
+      }
+
+      function updatePaymentSubmitLabel() {
+        const savingOnly = els.paymentForm.dataset.mode === 'saldo' && numberFrom(els.paymentAmount.value) <= 0;
+        els.paymentSubmitBtn.textContent = savingOnly ? 'Salvar valor em aberto' : 'Registrar pagamento';
+      }
+
+      function openPaymentDialog(client, payRest = false) {
+        let month = state.month;
+        const currentRemaining = Math.max(0, getDue(client, month) - getPaid(client, month));
+        if (!payRest && currentRemaining <= 0) month = nextMonth(month);
+        const remaining = Math.max(0, getDue(client, month) - getPaid(client, month));
+        els.paymentForm.dataset.mode = payRest ? 'saldo' : 'renovacao';
+        els.paymentClientId.value = client.id;
+        els.paymentClientName.textContent = client.nome;
+        els.paymentFeeText.textContent = `Mensalidade: ${money(client.mensalidade)}`;
+        els.paymentMonth.value = month;
+        els.paymentDebtField.hidden = !payRest;
+        els.paymentDebt.required = payRest;
+        els.paymentDebt.value = remaining.toFixed(2);
+        els.paymentDebt.dataset.previous = remaining.toFixed(2);
+        els.paymentAmount.min = '0';
+        els.paymentAmount.value = payRest ? '0.00' : remaining.toFixed(2);
+        els.paymentAmount.max = String(remaining || getDue(client, month));
+        els.paymentAmountHelp.hidden = !payRest;
+        els.paymentDate.value = todayISO;
+        els.paymentBalanceText.textContent = money(remaining);
+        els.paymentDialogTitle.textContent = payRest ? 'Ajustar ou pagar saldo' : 'Renovar mensalidade';
+        els.paymentDialogNote.textContent = payRest ? 'Edite o valor em aberto e informe quanto foi recebido agora.' : 'O valor recebido pode ser menor que a mensalidade.';
+        updatePaymentSubmitLabel();
+        els.paymentDialog.showModal();
+        requestAnimationFrame(() => (payRest ? els.paymentDebt : els.paymentAmount).select());
+      }
+
+      function openDeleteDialog(client) {
+        els.deleteClientId.value = client.id;
+        els.deleteClientName.textContent = client.nome;
+        els.deleteDialog.showModal();
+        requestAnimationFrame(() => els.deleteCancelBtn.focus());
+      }
+
+      els.clientForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const fee = Math.round(numberFrom(els.clientFee.value) * 100) / 100;
+        const due = Math.round(numberFrom(els.clientDue.value));
+        if (!els.clientName.value.trim()) { toast('Informe o nome do cliente.', 'error'); return; }
+        if (fee <= 0 || due < 1 || due > 31) return;
+        const id = els.clientId.value;
+        if (id) {
+          const client = state.clients.find((item) => item.id === id);
+          if (!client) return;
+          Object.assign(client, { nome: els.clientName.value.trim(), usuario: els.clientUser.value.trim(), whatsapp: els.clientPhone.value.trim(), mensalidade: fee, vencimento: due, ativo: els.clientActive.checked });
+          markDirty('Cliente atualizado. Exporte o JSON para salvar no GitHub.');
+        } else {
+          state.clients.push({ id: uid(), nome: els.clientName.value.trim(), usuario: els.clientUser.value.trim(), whatsapp: els.clientPhone.value.trim(), mensalidade: fee, vencimento: due, ativo: els.clientActive.checked, pagamentos: {} });
+          state.clients.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+          markDirty('Cliente adicionado. Exporte o JSON para salvar no GitHub.');
+        }
+        els.clientDialog.close();
+      });
+
+      els.paymentForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const client = state.clients.find((item) => item.id === els.paymentClientId.value);
+        if (!client) return;
+        const month = els.paymentMonth.value;
+        const amount = Math.round(numberFrom(els.paymentAmount.value) * 100) / 100;
+        const alreadyPaid = getRawPaid(client, month);
+        const balanceMode = els.paymentForm.dataset.mode === 'saldo';
+        const openBalance = balanceMode ? Math.round(numberFrom(els.paymentDebt.value) * 100) / 100 : Math.max(0, getDue(client, month) - alreadyPaid);
+        if (openBalance < 0 || amount < 0 || amount > openBalance + .001) {
+          toast(`Informe um valor entre R$ 0,00 e ${money(openBalance)}.`, 'error');
+          return;
+        }
+        client.pagamentos ||= {};
+        const due = balanceMode ? Math.round((alreadyPaid + openBalance) * 100) / 100 : getDue(client, month);
+        const paymentRecord = { pago: Math.round((alreadyPaid + amount) * 100) / 100, atualizadoEm: new Date(`${els.paymentDate.value}T12:00:00`).toISOString() };
+        if (balanceMode || client.pagamentos[month]?.valorDevido != null) paymentRecord.valorDevido = due;
+        client.pagamentos[month] = paymentRecord;
+        state.month = month;
+        els.monthSelect.value = month;
+        els.paymentDialog.close();
+        if (balanceMode && amount === 0) markDirty('Valor em aberto atualizado sem alterar a mensalidade fixa.');
+        else if (amount === 0) markDirty('Registro salvo sem pagamento; o saldo continua em aberto.');
+        else if (amount < openBalance) markDirty('Pagamento parcial registrado; o restante continua em aberto.');
+        else markDirty(balanceMode ? 'Saldo registrado como pago.' : 'Mensalidade renovada com sucesso.');
+      });
+
+      els.deleteForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const client = state.clients.find((item) => item.id === els.deleteClientId.value);
+        if (!client) return;
+        state.clients = state.clients.filter((item) => item.id !== client.id);
+        els.deleteDialog.close();
+        markDirty(`${client.nome} foi excluído. Exporte o JSON para salvar no GitHub.`);
+      });
+
+      els.rows.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-action]');
+        if (!button) return;
+        const client = state.clients.find((item) => item.id === button.dataset.id);
+        if (!client) return;
+        if (button.dataset.action === 'edit') openClientDialog(client);
+        else if (button.dataset.action === 'renew') openPaymentDialog(client, false);
+        else if (button.dataset.action === 'rest') openPaymentDialog(client, true);
+        else if (button.dataset.action === 'delete') openDeleteDialog(client);
+      });
+
+      els.monthSelect.value = state.month;
+      els.monthSelect.addEventListener('change', () => { state.month = els.monthSelect.value || currentMonth; state.page = 1; render(); });
+      els.searchInput.addEventListener('input', () => { state.query = els.searchInput.value; state.page = 1; renderRows(); });
+      els.statusFilter.addEventListener('change', () => { state.filter = els.statusFilter.value; state.page = 1; renderRows(); });
+      els.prevPageBtn.addEventListener('click', () => { if (state.page > 1) { state.page -= 1; renderRows(); els.tableWrap.scrollTop = 0; } });
+      els.nextPageBtn.addEventListener('click', () => { if (state.page * CLIENTS_PER_PAGE < visibleClients().length) { state.page += 1; renderRows(); els.tableWrap.scrollTop = 0; } });
+      els.addBtn.addEventListener('click', () => openClientDialog());
+      els.emptyAddBtn.addEventListener('click', () => openClientDialog());
+      els.refreshBtn.addEventListener('click', () => loadRemote(true));
+      els.paymentMonth.addEventListener('change', updatePaymentSummary);
+      els.paymentDebt.addEventListener('input', () => {
+        if (els.paymentForm.dataset.mode !== 'saldo') return;
+        const debt = Math.max(0, numberFrom(els.paymentDebt.value));
+        const amount = numberFrom(els.paymentAmount.value);
+        if (amount > debt) els.paymentAmount.value = debt.toFixed(2);
+        els.paymentDebt.dataset.previous = debt.toFixed(2);
+        els.paymentAmount.max = String(debt);
+        els.paymentBalanceText.textContent = money(debt);
+        updatePaymentSubmitLabel();
+      });
+      els.paymentAmount.addEventListener('input', updatePaymentSubmitLabel);
+
+      document.querySelectorAll('[data-close]').forEach((button) => button.addEventListener('click', () => document.getElementById(button.dataset.close).close()));
+      document.querySelectorAll('dialog').forEach((dialog) => dialog.addEventListener('click', (event) => {
+        const rect = dialog.getBoundingClientRect();
+        const outside = event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
+        if (outside) dialog.close();
+      }));
+
+      els.copyBtn.addEventListener('click', async () => {
+        const json = JSON.stringify(exportData(), null, 2);
+        try {
+          await navigator.clipboard.writeText(json);
+          toast('JSON copiado. Agora você pode substituir o arquivo no GitHub.');
+        } catch (_) {
+          const textArea = document.createElement('textarea');
+          textArea.value = json;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          textArea.remove();
+          toast('JSON copiado. Agora você pode substituir o arquivo no GitHub.');
+        }
+      });
+
+      els.downloadBtn.addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(exportData(), null, 2)], { type: 'application/json;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'clientes.json';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+        toast('Arquivo clientes.json baixado. Substitua o arquivo no GitHub.');
+      });
+
+      window.addEventListener('beforeunload', (event) => {
+        if (!state.dirty) return;
+        event.preventDefault();
+        event.returnValue = '';
+      });
+
+      function registerWebMCP() {
+        const context = document.modelContext;
+        if (!context?.registerTool) return;
+        const register = (tool) => { try { void Promise.resolve(context.registerTool(tool)).catch(() => {}); } catch (_) {} };
+        register({
+          name: 'read_monthly_dashboard',
+          title: 'Consultar resumo mensal',
+          description: 'Retorna os totais do mês selecionado e a situação de cada cliente, sem alterar dados.',
+          inputSchema: { type: 'object', properties: { mes: { type: 'string', pattern: '^\\d{4}-\\d{2}$' } }, additionalProperties: false },
+          annotations: { readOnlyHint: true, untrustedContentHint: true },
+          execute(input = {}) {
+            const month = input.mes || state.month;
+            const active = state.clients.filter((client) => client.ativo);
+            const total = active.reduce((sum, client) => sum + getDue(client, month), 0);
+            const recebido = active.reduce((sum, client) => sum + getPaid(client, month), 0);
+            return { mes: month, clientesAtivos: active.length, previsto: total, recebido, emAberto: Math.max(0, total - recebido), clientes: active.map((client) => ({ id: client.id, nome: client.nome, situacao: getStatus(client, month), mensalidade: client.mensalidade, valorDevido: getDue(client, month), recebido: getPaid(client, month) })) };
+          }
+        });
+        register({
+          name: 'add_client',
+          title: 'Adicionar cliente',
+          description: 'Adiciona um cliente à carteira visível e marca o JSON como alterado.',
+          inputSchema: { type: 'object', properties: { nome: { type: 'string', minLength: 1 }, usuario: { type: 'string' }, whatsapp: { type: 'string' }, mensalidade: { type: 'number', exclusiveMinimum: 0 }, vencimento: { type: 'integer', minimum: 1, maximum: 31 } }, required: ['nome', 'mensalidade', 'vencimento'], additionalProperties: false },
+          annotations: { readOnlyHint: false, untrustedContentHint: true },
+          execute(input) {
+            if (!input || typeof input.nome !== 'string' || !input.nome.trim() || !Number.isFinite(input.mensalidade) || input.mensalidade <= 0 || !Number.isInteger(input.vencimento) || input.vencimento < 1 || input.vencimento > 31) throw new Error('Dados do cliente inválidos.');
+            const client = { id: uid(), nome: input.nome.trim(), usuario: String(input.usuario || '').trim(), whatsapp: String(input.whatsapp || '').trim(), mensalidade: Math.round(input.mensalidade * 100) / 100, vencimento: input.vencimento, ativo: true, pagamentos: {} };
+            state.clients.push(client);
+            state.clients.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+            markDirty();
+            return { id: client.id, nome: client.nome, adicionado: true };
+          }
+        });
+        register({
+          name: 'register_payment',
+          title: 'Registrar pagamento',
+          description: 'Registra um pagamento total ou parcial para um cliente e uma competência.',
+          inputSchema: { type: 'object', properties: { clienteId: { type: 'string', minLength: 1 }, mes: { type: 'string', pattern: '^\\d{4}-\\d{2}$' }, valor: { type: 'number', minimum: 0 }, data: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$' } }, required: ['clienteId', 'mes', 'valor'], additionalProperties: false },
+          annotations: { readOnlyHint: false, untrustedContentHint: false },
+          execute(input) {
+            const client = state.clients.find((item) => item.id === input?.clienteId);
+            if (!client || !/^\d{4}-\d{2}$/.test(input.mes || '') || !Number.isFinite(input.valor) || input.valor < 0) throw new Error('Pagamento inválido.');
+            const paid = getRawPaid(client, input.mes);
+            const due = getDue(client, input.mes);
+            const remaining = Math.max(0, due - paid);
+            if (input.valor > remaining + .001) throw new Error(`O valor supera o saldo de ${money(remaining)}.`);
+            const paymentRecord = { pago: Math.round((paid + input.valor) * 100) / 100, atualizadoEm: new Date(`${input.data || todayISO}T12:00:00`).toISOString() };
+            if (client.pagamentos[input.mes]?.valorDevido != null) paymentRecord.valorDevido = due;
+            client.pagamentos[input.mes] = paymentRecord;
+            state.month = input.mes;
+            els.monthSelect.value = input.mes;
+            markDirty();
+            return { clienteId: client.id, mes: input.mes, recebido: client.pagamentos[input.mes].pago, emAberto: Math.max(0, due - client.pagamentos[input.mes].pago) };
+          }
+        });
+        register({
+          name: 'set_open_balance',
+          title: 'Definir valor em aberto',
+          description: 'Define o saldo exato que um cliente deve em uma competência sem alterar sua mensalidade fixa.',
+          inputSchema: { type: 'object', properties: { clienteId: { type: 'string', minLength: 1 }, mes: { type: 'string', pattern: '^\\d{4}-\\d{2}$' }, saldoEmAberto: { type: 'number', minimum: 0 } }, required: ['clienteId', 'mes', 'saldoEmAberto'], additionalProperties: false },
+          annotations: { readOnlyHint: false, untrustedContentHint: false },
+          execute(input) {
+            const client = state.clients.find((item) => item.id === input?.clienteId);
+            if (!client || !/^\d{4}-\d{2}$/.test(input.mes || '') || !Number.isFinite(input.saldoEmAberto) || input.saldoEmAberto < 0) throw new Error('Saldo inválido.');
+            const paid = getRawPaid(client, input.mes);
+            client.pagamentos[input.mes] = { pago: paid, valorDevido: Math.round((paid + input.saldoEmAberto) * 100) / 100, atualizadoEm: new Date().toISOString() };
+            state.month = input.mes;
+            els.monthSelect.value = input.mes;
+            markDirty();
+            return { clienteId: client.id, mes: input.mes, mensalidade: client.mensalidade, emAberto: input.saldoEmAberto };
+          }
+        });
+        register({
+          name: 'delete_client',
+          title: 'Excluir cliente',
+          description: 'Exclui um cliente e todo o histórico de pagamentos dele do próximo JSON exportado.',
+          inputSchema: { type: 'object', properties: { clienteId: { type: 'string', minLength: 1 } }, required: ['clienteId'], additionalProperties: false },
+          annotations: { readOnlyHint: false, destructiveHint: true, untrustedContentHint: false },
+          execute(input) {
+            const client = state.clients.find((item) => item.id === input?.clienteId);
+            if (!client) throw new Error('Cliente não encontrado.');
+            state.clients = state.clients.filter((item) => item.id !== client.id);
+            markDirty();
+            return { clienteId: client.id, nome: client.nome, excluido: true };
+          }
+        });
+      }
+
+      async function derivePassword(value) {
+        const encoder = new TextEncoder();
+        const key = await crypto.subtle.importKey('raw', encoder.encode(value), 'PBKDF2', false, ['deriveBits']);
+        const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: encoder.encode(PASSWORD_SALT), iterations: 150000 }, key, 256);
+        return Array.from(new Uint8Array(bits), (byte) => byte.toString(16).padStart(2, '0')).join('');
+      }
+
+      let appStarted = false;
+      function startApp() {
+        if (appStarted) return;
+        appStarted = true;
+        els.loginScreen.hidden = true;
+        els.appShell.hidden = false;
+        els.appShell.removeAttribute('aria-hidden');
+        render();
+        registerWebMCP();
+        loadRemote(false);
+      }
+
+      els.loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        els.loginError.textContent = '';
+        const submit = els.loginForm.querySelector('button[type="submit"]');
+        submit.disabled = true;
+        try {
+          const verifier = await derivePassword(els.loginPassword.value);
+          if (verifier !== PASSWORD_VERIFIER) {
+            els.loginError.textContent = 'Senha incorreta. Tente novamente.';
+            els.loginPassword.select();
+            return;
+          }
+          sessionStorage.setItem(AUTH_SESSION_KEY, '1');
+          startApp();
+        } catch (_) {
+          els.loginError.textContent = 'Não foi possível validar a senha neste navegador.';
+        } finally {
+          submit.disabled = false;
+        }
+      });
+
+      let installPrompt = null;
+      window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        installPrompt = event;
+        els.installBtn.classList.add('install-ready');
+      });
+
+      els.installBtn.addEventListener('click', async () => {
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+          toast('O Mensalista já está instalado como aplicativo.');
+          return;
+        }
+        if (!installPrompt) {
+          toast(location.protocol === 'file:' ? 'Abra o endereço publicado para instalar o aplicativo.' : 'No menu do navegador, escolha “Instalar Mensalista”.');
+          return;
+        }
+        installPrompt.prompt();
+        await installPrompt.userChoice;
+        installPrompt = null;
+        els.installBtn.classList.remove('install-ready');
+      });
+
+      window.addEventListener('appinstalled', () => toast('Mensalista instalado na área de trabalho.'));
+      if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('./sw.js').catch(() => {});
+
+      els.appShell.setAttribute('aria-hidden', 'true');
+      if (sessionStorage.getItem(AUTH_SESSION_KEY) === '1') startApp();
+      else requestAnimationFrame(() => els.loginPassword.focus());
+    })();
+  </script>
+</body>
+</html>
