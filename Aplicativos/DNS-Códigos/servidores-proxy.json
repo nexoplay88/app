@@ -16,7 +16,7 @@
     },
     "galaxy": {
       "publicHost": "galaxy-nexo.duckdns.org",
-      "origin": "httpss://galaxy.mrtv2.shop",
+      "origin": "https://google.com.br",
       "m3uPath": "/get.php",
       "enabled": true
     },
