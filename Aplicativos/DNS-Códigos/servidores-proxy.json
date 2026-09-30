@@ -8,9 +8,9 @@
       "m3uPath": "/get.php",
       "enabled": true
     },
-    "fire": {
-      "publicHost": "fire-nexo.duckdns.org",
-      "origin": "http://fire.mrtv2.shop",
+    "atena": {
+      "publicHost": "atena-nexo.duckdns.org",
+      "origin": "http://atenaplay.lat",
       "m3uPath": "/get.php",
       "enabled": true
     },
