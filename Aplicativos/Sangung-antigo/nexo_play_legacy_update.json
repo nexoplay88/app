@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "ativo": true,
-  "versao": "1.029",
+  "versao": "1.030",
   "widgetId": "NexoPlayHDLegacy",
   "titulo": "Nexo Play",
-  "descricao": "Compatível com Samsung E, F, H e J",
-  "arquivo": "https://tvonplus.github.io/app/Samsung-%20antiga/NexoPlay_Samsung_v1.029.zip",
-  "sha256": "E2EE57E9B16217029A3769B39A1DEE0DB9CCED222B8FE205E2BFAF5948AC95BE",
-  "tamanho": 278836
+  "descricao": "Samsung Legacy: migracao segura, novo JSON e tela inicial leve",
+  "arquivo": "https://tvonplus.github.io/app/Samsung-%20antiga/NexoPlay_Samsung_v1.030.zip",
+  "sha256": "170557E6FF8A80F809BACA19FC865F8E1CA8C36BA0FA4CA0B277A153ED555AA1",
+  "tamanho": 279281
 }
