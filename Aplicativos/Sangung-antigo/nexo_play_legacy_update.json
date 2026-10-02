@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "ativo": true,
-  "versao": "1.030",
+  "versao": "1.032",
   "widgetId": "NexoPlayHDLegacy",
   "titulo": "Nexo Play",
-  "descricao": "Samsung Legacy: migracao segura, novo JSON e tela inicial leve",
-  "arquivo": "https://tvonplus.github.io/app/Samsung-%20antiga/NexoPlay_Samsung_v1.030.zip",
-  "sha256": "170557E6FF8A80F809BACA19FC865F8E1CA8C36BA0FA4CA0B277A153ED555AA1",
-  "tamanho": 279281
+  "descricao": "Samsung Legacy: aviso discreto no player e migracao segura",
+  "arquivo": "https://nexoplay88.github.io/app\Aplicativos\Sangung-antigo\NexoPlay_Samsung_v1.032.zip",
+  "sha256": "156D43E81C141B4D1F22D1490BD0B51AC810D9D65D221912E8491AC03B6EFE7B",
+  "tamanho": 279451
 }
