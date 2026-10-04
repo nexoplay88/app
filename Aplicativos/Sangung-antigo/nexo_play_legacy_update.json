@@ -1,11 +1,11 @@
 {
   "schema": 1,
   "ativo": true,
-  "versao": "1.033",
+  "versao": "1.035",
   "widgetId": "NexoPlayHDLegacy",
   "titulo": "Nexo Play",
-  "descricao": "Samsung Legacy: JSON oficial de servidores e senha visivel",
-  "arquivo": "https://nexoplay88.github.io/app/Aplicativos/Sangung-antigo/NexoPlay_Samsung_v1.033.zip",
-  "sha256": "14E9698C77F451CE31F0A1142811F0CF5054BB8ABC731F5F73756E074C767441",
-  "tamanho": 279367
+  "descricao": "Samsung Legacy: JSON atual via jsDelivr, servidores corrigidos e versao visivel",
+  "arquivo": "https://nexoplay88.github.io/app/Aplicativos/Sangung-antigo/NexoPlay_Samsung_v1.035.zip",
+  "sha256": "D39B9834D8412D85B2722623FAB7258A33F56FE2E001B7D1344E6BD282599C7F",
+  "tamanho": 279372
 }
