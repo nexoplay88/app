@@ -39,7 +39,7 @@
           "servidores": [
             {
               "serverName": "Explosion",
-              "serverHost": "http://fasttv.sbs"
+              "serverHost": "http://srcine.site:80"
             },
             {
               "serverName": "Speed",
