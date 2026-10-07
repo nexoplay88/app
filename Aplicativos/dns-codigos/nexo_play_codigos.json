@@ -65,18 +65,18 @@
       "nomePrincipal": "Aloka",
       "fontes": [
         {
-          "nomeFonte": "Periquita",
+          "nomeFonte": "Um servidor",
           "servidores": [
             {
-              "serverName": "Vagina",
+              "serverName": "alo",
               "serverHost": "http://sevenconect.lat"
             },
             {
-              "serverName": "Rola",
+              "serverName": "terra",
               "serverHost": "http://netuno.live"
             },
             {
-              "serverName": "Putinha",
+              "serverName": "lua",
               "serverHost": "http://new-link.shop"
             }
           ]
