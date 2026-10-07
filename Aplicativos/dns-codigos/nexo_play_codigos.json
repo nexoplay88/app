@@ -61,6 +61,28 @@
         }
       ]
     },
+    "6659": {
+      "nomePrincipal": "Aloka",
+      "fontes": [
+        {
+          "nomeFonte": "Periquita",
+          "servidores": [
+            {
+              "serverName": "Vagina",
+              "serverHost": "http://sevenconect.lat"
+            },
+            {
+              "serverName": "Rola",
+              "serverHost": "http://netuno.live"
+            },
+            {
+              "serverName": "Putinha",
+              "serverHost": "http://new-link.shop"
+            }
+          ]
+        }
+      ]
+    },
     "9999": {
       "nomePrincipal": "TESTES",
       "fontes": [
