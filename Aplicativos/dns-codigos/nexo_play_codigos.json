@@ -61,6 +61,28 @@
         }
       ]
     },
+    "6659": {
+      "nomePrincipal": "Aloka",
+      "fontes": [
+        {
+          "nomeFonte": "Um servidor",
+          "servidores": [
+            {
+              "serverName": "alo",
+              "serverHost": "http://sevenconect.lat"
+            },
+            {
+              "serverName": "terra",
+              "serverHost": "http://netuno.live"
+            },
+            {
+              "serverName": "lua",
+              "serverHost": "http://new-link.shop"
+            }
+          ]
+        }
+      ]
+    },
     "9999": {
       "nomePrincipal": "TESTES",
       "fontes": [
