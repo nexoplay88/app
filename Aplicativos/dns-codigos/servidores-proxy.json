@@ -4,7 +4,7 @@
   "servers": {
     "explosion": {
       "publicHost": "explosion-nexo.duckdns.org",
-      "origin": "http://srcine.site:80",
+      "origin": "http://srcine.site",
       "m3uPath": "/get.php",
       "enabled": true
     },
