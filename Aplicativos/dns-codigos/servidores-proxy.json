@@ -28,7 +28,7 @@
     },
     "speed": {
       "publicHost": "speed-nexo.duckdns.org",
-      "origin": "http://netuno.live",
+      "origin": "https://google.com",
       "m3uPath": "/get.php",
       "enabled": true
     }
