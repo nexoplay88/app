@@ -10,7 +10,7 @@
     },
     "atena": {
       "publicHost": "atena-nexo.duckdns.org",
-      "origin": "http://atenaplay.lat",
+      "origin": "http://atena.tvonplus.shop/",
       "m3uPath": "/get.php",
       "enabled": true
     },
