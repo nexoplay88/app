@@ -1,6 +1,6 @@
 {
   "versao": 1,
-  "atualizadoEm": "2026-10-05T10:30:42.995Z",
+  "atualizadoEm": "2026-10-15T15:10:37.896Z",
   "clientes": [
     {
       "id": "1b845e1c-9481-4929-aec5-b8f8966507f3",
@@ -29,12 +29,7 @@
       "mensalidade": 200,
       "vencimento": 26,
       "ativo": true,
-      "pagamentos": {
-        "2026-09": {
-          "pago": 200,
-          "atualizadoEm": "2026-10-05T15:00:00.000Z"
-        }
-      }
+      "pagamentos": {}
     },
     {
       "id": "4d687e2b-887d-4726-aac5-50ad04c55de6",
@@ -64,6 +59,10 @@
         "2026-09": {
           "pago": 200,
           "atualizadoEm": "2026-09-15T15:00:00.000Z"
+        },
+        "2026-10": {
+          "pago": 200,
+          "atualizadoEm": "2026-10-15T15:00:00.000Z"
         }
       }
     },
@@ -97,7 +96,7 @@
         },
         "2026-10": {
           "pago": 200,
-          "atualizadoEm": "2026-10-05T15:00:00.000Z"
+          "atualizadoEm": "2026-10-15T15:00:00.000Z"
         }
       }
     },
@@ -106,15 +105,10 @@
       "nome": "Lucas",
       "usuario": "ferreiralins1810@gmail.com",
       "whatsapp": "8195794795",
-      "mensalidade": 150,
+      "mensalidade": 200,
       "vencimento": 30,
       "ativo": true,
-      "pagamentos": {
-        "2026-09": {
-          "pago": 150,
-          "atualizadoEm": "2026-10-05T15:00:00.000Z"
-        }
-      }
+      "pagamentos": {}
     },
     {
       "id": "77313b25-1ec1-4104-a2aa-4a9fb84d6aae",
@@ -122,7 +116,7 @@
       "usuario": "rbtvonline32@gmail.com",
       "whatsapp": "88992948541",
       "mensalidade": 200,
-      "vencimento": 10,
+      "vencimento": 16,
       "ativo": true,
       "pagamentos": {
         "2026-09": {
