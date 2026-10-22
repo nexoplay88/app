@@ -28,7 +28,7 @@
     },
     "speed": {
       "publicHost": "speed-nexo.duckdns.org",
-      "origin": "http://netuno.live",
+      "origin": "http://blackvizion.shop",
       "m3uPath": "/get.php",
       "enabled": true
     }
