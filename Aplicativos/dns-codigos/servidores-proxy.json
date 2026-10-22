@@ -22,7 +22,7 @@
     },
     "seven": {
       "publicHost": "seven-nexo.duckdns.org",
-      "origin": "http://sevenconect.lat",
+      "origin": "http://premiotv.fun",
       "m3uPath": "/get.php",
       "enabled": true
     },
