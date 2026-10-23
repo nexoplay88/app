@@ -4,7 +4,7 @@
   "servers": {
     "explosion": {
       "publicHost": "explosion-nexo.duckdns.org",
-      "origin": "http://srcine.site",
+      "origin": "http://linkcine.online:,
       "m3uPath": "/get.php",
       "enabled": true
     },
@@ -16,19 +16,19 @@
     },
     "galaxy": {
       "publicHost": "galaxy-nexo.duckdns.org",
-      "origin": "http://new-link.shop",
+      "origin": "http://anbinvlink.fun",
       "m3uPath": "/get.php",
       "enabled": true
     },
     "seven": {
       "publicHost": "seven-nexo.duckdns.org",
-      "origin": "http://sevenconect.lat",
+      "origin": "http://premiotv.fun",
       "m3uPath": "/get.php",
       "enabled": true
     },
     "speed": {
       "publicHost": "speed-nexo.duckdns.org",
-      "origin": "http://netuno.live",
+      "origin": "http://blackvizion.shop",
       "m3uPath": "/get.php",
       "enabled": true
     }
