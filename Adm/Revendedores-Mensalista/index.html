@@ -897,26 +897,6 @@
           const legacyValue = client.valorPagoMes ?? client.valor_pago_mes ?? client.valorPago ?? (typeof client.pago === 'number' ? client.pago : null);
           if (legacyValue != null) write(client.competencia || client.mes || currentMonth, legacyValue, client.atualizadoEm);
           else if (client.pago === true) write(client.competencia || client.mes || currentMonth, client.mensalidade ?? client.valorMensalidade ?? client.valor, client.atualizadoEm);
-{
-  "versao": 1,
-  "atualizadoEm": "2026-10-17T13:46:55.796Z",
-  "clientes": [
-    {
-      "id": "1b845e1c-9481-4929-aec5-b8f8966507f3",
-      "nome": "Aleson",
-      "usuario": "arecommercedigital@gmail.com",
-      "whatsapp": "11945554784",
-      "mensalidade": 200,
-      "vencimento": 10,
-      "ativo": true,
-      "pagamentos": {
-        "2026-09": {
-          "pago": 200,
-          "atualizadoEm": "2026-09-14T15:00:00.000Z"
-        },
-        "2026-10": {
-          "pago": 200,
-          "atualizadoEm": "2026-09-18T15:00:00.000Z"
         }
         return payments;
       }
@@ -1049,30 +1029,6 @@
           els.tableWrap.hidden = false;
           els.empty.classList.remove('show');
           return;
-    },
-    {
-      "id": "d0aa3ff9-460b-407e-846d-fc20d89df3e6",
-      "nome": "Aloncio",
-      "usuario": "srmeliodas037@gmail.com",
-      "whatsapp": "38991287072",
-      "mensalidade": 200,
-      "vencimento": 26,
-      "ativo": true,
-      "pagamentos": {}
-    },
-    {
-      "id": "4d687e2b-887d-4726-aac5-50ad04c55de6",
-      "nome": "Amilton",
-      "usuario": "amiltonforever547@gmail.com",
-      "whatsapp": "66992609698",
-      "mensalidade": 200,
-      "vencimento": 1,
-      "ativo": true,
-      "pagamentos": {
-        "2026-09": {
-          "pago": 0.01,
-          "atualizadoEm": "2026-09-14T15:00:00.000Z",
-          "valorDevido": 390.01
         }
 
         const clients = visibleClients();
@@ -1152,23 +1108,6 @@
           els.sourceMeta.textContent = 'Comece adicionando clientes';
           els.syncText.textContent = 'O JSON remoto está indisponível. Você pode trabalhar e baixar um novo arquivo.';
           els.sourceDot.className = 'source-dot error';
-    },
-    {
-      "id": "ad242c9b-2b6d-4452-9165-305c74367b99",
-      "nome": "Clademilson",
-      "usuario": "claudemilson.passos.gomes@gmail.com",
-      "whatsapp": "5561981585716",
-      "mensalidade": 200,
-      "vencimento": 15,
-      "ativo": true,
-      "pagamentos": {
-        "2026-09": {
-          "pago": 200,
-          "atualizadoEm": "2026-09-15T15:00:00.000Z"
-        },
-        "2026-10": {
-          "pago": 200,
-          "atualizadoEm": "2026-10-15T15:00:00.000Z"
         }
       }
 
@@ -1227,19 +1166,6 @@
           els.refreshBtn.disabled = false;
           if (refreshIcon) refreshIcon.classList.remove('spin');
           render();
-    },
-    {
-      "id": "4280acb2-ef09-4e4f-8371-2609427fd498",
-      "nome": "Julierme",
-      "usuario": "julierme.souza@gmail.com",
-      "whatsapp": "5537999989150",
-      "mensalidade": 200,
-      "vencimento": 20,
-      "ativo": true,
-      "pagamentos": {
-        "2026-09": {
-          "pago": 200,
-          "atualizadoEm": "2026-09-22T15:00:00.000Z"
         }
       }
 
@@ -1266,23 +1192,6 @@
         if (els.paymentForm.dataset.mode === 'saldo') {
           els.paymentDebt.value = remaining.toFixed(2);
           els.paymentDebt.dataset.previous = remaining.toFixed(2);
-    },
-    {
-      "id": "17ccd5dc-b14b-41be-80c9-44e2ea107e35",
-      "nome": "Kenia",
-      "usuario": "keniajck2023@gmail.com",
-      "whatsapp": "91991292934",
-      "mensalidade": 200,
-      "vencimento": 7,
-      "ativo": true,
-      "pagamentos": {
-        "2026-09": {
-          "pago": 200,
-          "atualizadoEm": "2026-09-01T15:00:00.000Z"
-        },
-        "2026-10": {
-          "pago": 200,
-          "atualizadoEm": "2026-10-15T15:00:00.000Z"
         }
         els.paymentAmount.min = '0';
         els.paymentAmount.max = String(remaining || getDue(client, month));
@@ -1438,19 +1347,6 @@
           document.execCommand('copy');
           textArea.remove();
           toast('JSON copiado. Agora você pode substituir o arquivo no GitHub.');
-    },
-    {
-      "id": "53fdeb08-c4a9-4a03-98c6-b74fa2611c27",
-      "nome": "Lucas",
-      "usuario": "ferreiralins1810@gmail.com",
-      "whatsapp": "8195794795",
-      "mensalidade": 200,
-      "vencimento": 30,
-      "ativo": true,
-      "pagamentos": {
-        "2026-09": {
-          "pago": 200,
-          "atualizadoEm": "2026-10-17T15:00:00.000Z"
         }
       });
 
@@ -1598,20 +1494,6 @@
           els.loginError.textContent = 'Não foi possível validar a senha neste navegador.';
         } finally {
           submit.disabled = false;
-    },
-    {
-      "id": "77313b25-1ec1-4104-a2aa-4a9fb84d6aae",
-      "nome": "Rafhael Barros",
-      "usuario": "rbtvonline32@gmail.com",
-      "whatsapp": "88992948541",
-      "mensalidade": 200,
-      "vencimento": 16,
-      "ativo": true,
-      "pagamentos": {
-        "2026-09": {
-          "pago": 200.01,
-          "atualizadoEm": "2026-10-17T15:00:00.000Z",
-          "valorDevido": 430.01
         }
       });
 
@@ -1647,7 +1529,3 @@
   </script>
 </body>
 </html>
-      }
-    }
-  ]
-}
