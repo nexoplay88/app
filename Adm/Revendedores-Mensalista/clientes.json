@@ -1,6 +1,6 @@
 {
   "versao": 1,
-  "atualizadoEm": "2026-10-15T15:10:37.896Z",
+  "atualizadoEm": "2026-10-17T13:46:55.796Z",
   "clientes": [
     {
       "id": "1b845e1c-9481-4929-aec5-b8f8966507f3",
@@ -108,7 +108,12 @@
       "mensalidade": 200,
       "vencimento": 30,
       "ativo": true,
-      "pagamentos": {}
+      "pagamentos": {
+        "2026-09": {
+          "pago": 200,
+          "atualizadoEm": "2026-10-17T15:00:00.000Z"
+        }
+      }
     },
     {
       "id": "77313b25-1ec1-4104-a2aa-4a9fb84d6aae",
@@ -120,8 +125,8 @@
       "ativo": true,
       "pagamentos": {
         "2026-09": {
-          "pago": 0.01,
-          "atualizadoEm": "2026-09-14T15:00:00.000Z",
+          "pago": 200.01,
+          "atualizadoEm": "2026-10-17T15:00:00.000Z",
           "valorDevido": 430.01
         }
       }
