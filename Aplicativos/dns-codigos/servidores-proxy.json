@@ -4,7 +4,7 @@
   "servers": {
     "explosion": {
       "publicHost": "explosion-nexo.duckdns.org",
-      "origin": "http://linkcine.online:,
+      "origin": "http://linkcine.online:",
       "m3uPath": "/get.php",
       "enabled": true
     },
