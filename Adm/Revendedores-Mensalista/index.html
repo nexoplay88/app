@@ -744,7 +744,7 @@
         <div class="payment-summary"><div><strong id="paymentClientName">Cliente</strong><span id="paymentFeeText">Mensalidade: R$ 0,00</span></div><div class="payment-balance"><strong id="paymentBalanceText">R$ 0,00</strong><span>em aberto na competência</span></div></div>
         <div class="form-grid">
           <div class="field"><label for="paymentMonth">Competência</label><input id="paymentMonth" type="month" required></div>
-          <div class="field" id="paymentDebtField" hidden><label for="paymentDebt">Valor em aberto</label><input id="paymentDebt" type="number" inputmode="decimal" min="0" step="0.01"><div class="field-help">Pode incluir dívidas anteriores sem alterar a mensalidade fixa.</div></div>
+          <div class="field" id="paymentDebtField" hidden><label for="paymentDebt">Valor em aberto</label><input id="paymentDebt" type="number" inputmode="decimal" min="0" step="0.01"><div class="field-help">Os saldos de meses anteriores entram automaticamente neste valor.</div></div>
           <div class="field"><label for="paymentAmount">Valor recebido agora</label><input id="paymentAmount" type="number" inputmode="decimal" min="0" step="0.01" required><div class="field-help" id="paymentAmountHelp" hidden>Deixe 0 para somente salvar a dívida.</div></div>
           <div class="field full"><label for="paymentDate">Data do pagamento</label><input id="paymentDate" type="date" required></div>
         </div>
@@ -942,11 +942,21 @@
         return Math.max(0, numberFrom(client.pagamentos?.[month]?.pago));
       }
 
-      function getDue(client, month = state.month) {
+      function getBaseDue(client, month = state.month) {
         const payment = client.pagamentos?.[month];
-        const rawPaid = getRawPaid(client, month);
         const customDue = payment?.valorDevido;
-        return Math.max(rawPaid, customDue == null ? client.mensalidade : Math.max(0, numberFrom(customDue)));
+        return customDue == null ? client.mensalidade : Math.max(0, numberFrom(customDue));
+      }
+
+      function getPreviousBalance(client, month = state.month) {
+        const previousPayments = Object.keys(client.pagamentos || {}).filter((paymentMonth) => /^\d{4}-\d{2}$/.test(paymentMonth) && paymentMonth < month);
+        const billed = previousPayments.reduce((sum, paymentMonth) => sum + getBaseDue(client, paymentMonth), 0);
+        const received = previousPayments.reduce((sum, paymentMonth) => sum + getRawPaid(client, paymentMonth), 0);
+        return Math.max(0, Math.round((billed - received) * 100) / 100);
+      }
+
+      function getDue(client, month = state.month) {
+        return Math.round((getBaseDue(client, month) + getPreviousBalance(client, month)) * 100) / 100;
       }
 
       function getPaid(client, month = state.month) {
@@ -965,6 +975,7 @@
         const due = getDue(client, month);
         if (paid > 0 && paid < due) return 'parcial';
         if (paid >= due) return 'em-dia';
+        if (getPreviousBalance(client, month) > 0) return 'vencido';
         return new Date() > getDueDate(month, client.vencimento) ? 'vencido' : 'em-dia';
       }
 
@@ -1057,6 +1068,7 @@
         els.rows.innerHTML = pageClients.map((client) => {
           const paid = getPaid(client);
           const remaining = Math.max(0, getDue(client) - paid);
+          const previousBalance = getPreviousBalance(client);
           const status = getStatus(client);
           const rawPhoneDigits = client.whatsapp.replace(/\D/g, '');
           const phoneDigits = rawPhoneDigits.length === 10 || rawPhoneDigits.length === 11 ? `55${rawPhoneDigits}` : rawPhoneDigits;
@@ -1072,9 +1084,9 @@
             <td data-label="Mensalidade"><div class="money-main">${money(client.mensalidade)}</div></td>
             <td data-label="Vencimento"><div class="money-main">${escapeHTML(dueText)}</div><div class="money-sub">dia ${client.vencimento}</div></td>
             <td data-label="Situação"><span class="status status-${statusClass(status)}">${statusLabel(status, client)}</span></td>
-            <td data-label="Recebido / saldo"><div class="money-main">${money(paid)} recebido</div><div class="money-sub">${remaining > 0 ? `${money(remaining)} em aberto` : 'sem saldo pendente'}</div></td>
+            <td data-label="Recebido / saldo"><div class="money-main">${money(paid)} recebido</div><div class="money-sub">${remaining > 0 ? `${money(remaining)} em aberto${previousBalance > 0 ? ` · inclui ${money(previousBalance)} anterior` : ''}` : 'sem saldo pendente'}</div></td>
             <td class="actions-cell" data-label="Ações"><div class="actions">
-              ${client.ativo ? `<button class="renew-btn" type="button" data-action="renew" data-id="${escapeHTML(client.id)}">${icon('refresh')} Renovar</button>` : ''}
+              ${client.ativo && remaining > 0 && getRawPaid(client) === 0 ? `<button class="renew-btn" type="button" data-action="renew" data-id="${escapeHTML(client.id)}">${icon('refresh')} Renovar</button>` : ''}
               ${canPayRest ? `<button class="icon-btn pay-rest" type="button" data-action="rest" data-id="${escapeHTML(client.id)}" title="Ajustar ou pagar saldo" aria-label="Ajustar ou pagar o saldo de ${escapeHTML(client.nome)}">${icon('wallet')}</button>` : ''}
               <button class="icon-btn" type="button" data-action="edit" data-id="${escapeHTML(client.id)}" title="Editar cliente" aria-label="Editar ${escapeHTML(client.nome)}">${icon('edit')}</button>
               <button class="icon-btn delete-client" type="button" data-action="delete" data-id="${escapeHTML(client.id)}" title="Excluir cliente" aria-label="Excluir ${escapeHTML(client.nome)}">${icon('trash')}</button>
@@ -1225,7 +1237,7 @@
         els.paymentDate.value = todayISO;
         els.paymentBalanceText.textContent = money(remaining);
         els.paymentDialogTitle.textContent = payRest ? 'Ajustar ou pagar saldo' : 'Renovar mensalidade';
-        els.paymentDialogNote.textContent = payRest ? 'Edite o valor em aberto e informe quanto foi recebido agora.' : 'O valor recebido pode ser menor que a mensalidade.';
+        els.paymentDialogNote.textContent = payRest ? 'O saldo de meses anteriores já está incluído. Edite o valor em aberto e informe quanto foi recebido agora.' : 'O valor recebido pode ser menor que a mensalidade; débitos anteriores já entram no saldo.';
         updatePaymentSubmitLabel();
         els.paymentDialog.showModal();
         requestAnimationFrame(() => (payRest ? els.paymentDebt : els.paymentAmount).select());
@@ -1272,7 +1284,7 @@
           return;
         }
         client.pagamentos ||= {};
-        const due = balanceMode ? Math.round((alreadyPaid + openBalance) * 100) / 100 : getDue(client, month);
+        const due = balanceMode ? Math.max(0, Math.round((alreadyPaid + openBalance - getPreviousBalance(client, month)) * 100) / 100) : getBaseDue(client, month);
         const paymentRecord = { pago: Math.round((alreadyPaid + amount) * 100) / 100, atualizadoEm: new Date(`${els.paymentDate.value}T12:00:00`).toISOString() };
         if (balanceMode || client.pagamentos[month]?.valorDevido != null) paymentRecord.valorDevido = due;
         client.pagamentos[month] = paymentRecord;
@@ -1416,7 +1428,7 @@
             const remaining = Math.max(0, due - paid);
             if (input.valor > remaining + .001) throw new Error(`O valor supera o saldo de ${money(remaining)}.`);
             const paymentRecord = { pago: Math.round((paid + input.valor) * 100) / 100, atualizadoEm: new Date(`${input.data || todayISO}T12:00:00`).toISOString() };
-            if (client.pagamentos[input.mes]?.valorDevido != null) paymentRecord.valorDevido = due;
+            if (client.pagamentos[input.mes]?.valorDevido != null) paymentRecord.valorDevido = getBaseDue(client, input.mes);
             client.pagamentos[input.mes] = paymentRecord;
             state.month = input.mes;
             els.monthSelect.value = input.mes;
@@ -1427,14 +1439,15 @@
         register({
           name: 'set_open_balance',
           title: 'Definir valor em aberto',
-          description: 'Define o saldo exato que um cliente deve em uma competência sem alterar sua mensalidade fixa.',
+          description: 'Define o saldo total em aberto para a competência, incluindo dívidas de meses anteriores, sem alterar a mensalidade fixa.',
           inputSchema: { type: 'object', properties: { clienteId: { type: 'string', minLength: 1 }, mes: { type: 'string', pattern: '^\\d{4}-\\d{2}$' }, saldoEmAberto: { type: 'number', minimum: 0 } }, required: ['clienteId', 'mes', 'saldoEmAberto'], additionalProperties: false },
           annotations: { readOnlyHint: false, untrustedContentHint: false },
           execute(input) {
             const client = state.clients.find((item) => item.id === input?.clienteId);
             if (!client || !/^\d{4}-\d{2}$/.test(input.mes || '') || !Number.isFinite(input.saldoEmAberto) || input.saldoEmAberto < 0) throw new Error('Saldo inválido.');
             const paid = getRawPaid(client, input.mes);
-            client.pagamentos[input.mes] = { pago: paid, valorDevido: Math.round((paid + input.saldoEmAberto) * 100) / 100, atualizadoEm: new Date().toISOString() };
+            const baseDue = Math.max(0, Math.round((paid + input.saldoEmAberto - getPreviousBalance(client, input.mes)) * 100) / 100);
+            client.pagamentos[input.mes] = { pago: paid, valorDevido: baseDue, atualizadoEm: new Date().toISOString() };
             state.month = input.mes;
             els.monthSelect.value = input.mes;
             markDirty();
