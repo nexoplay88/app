@@ -1,6 +1,6 @@
 {
   "versao": 1,
-  "atualizadoEm": "2026-10-27T14:35:35.450Z",
+  "atualizadoEm": "2026-10-27T14:45:37.190Z",
   "clientes": [
     {
       "id": "1b845e1c-9481-4929-aec5-b8f8966507f3",
@@ -33,22 +33,6 @@
         "2026-10": {
           "pago": 200,
           "atualizadoEm": "2026-10-27T15:00:00.000Z"
-        }
-      }
-    },
-    {
-      "id": "4d687e2b-887d-4726-aac5-50ad04c55de6",
-      "nome": "Amilton",
-      "usuario": "amiltonforever547@gmail.com",
-      "whatsapp": "66992609698",
-      "mensalidade": 200,
-      "vencimento": 1,
-      "ativo": true,
-      "pagamentos": {
-        "2026-09": {
-          "pago": 0.01,
-          "atualizadoEm": "2026-09-14T15:00:00.000Z",
-          "valorDevido": 390.01
         }
       }
     },
