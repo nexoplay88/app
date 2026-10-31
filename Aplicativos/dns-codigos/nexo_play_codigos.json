@@ -62,22 +62,27 @@
       ]
     },
     "6659": {
-      "nomePrincipal": "Aloka",
-      "fontes": [
-        {
-          "nomeFonte": "Um servidor",
+      "nomeFonte": "Netplay",
           "servidores": [
             {
-              "serverName": "alo",
-              "serverHost": "http://sevenconect.lat"
+              "serverName": "babado",
+              "serverHost": "http://fastbr.site"
             },
             {
-              "serverName": "terra",
-              "serverHost": "http://netuno.live"
+              "serverName": "vagin@",
+              "serverHost": "http://blackvizion.shop"
             },
             {
-              "serverName": "lua",
-              "serverHost": "http://new-link.shop"
+              "serverName": "periquita",
+              "serverHost": "http://anbinvlink.fun"
+            },
+            {
+              "serverName": "rola",
+              "serverHost": "http://atenaplay.lat"
+            },
+            {
+              "serverName": "bucet@",
+              "serverHost": "http://premiotv.fun"
             }
           ]
         }
