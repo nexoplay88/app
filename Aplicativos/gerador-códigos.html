@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <title>Gerador de códigos — Nexo Play</title>
+
   <style>
     :root {
       --bg: #071114;
@@ -32,7 +33,8 @@
         radial-gradient(circle at 85% 10%, rgba(47, 140, 255, .14), transparent 28rem),
         radial-gradient(circle at 12% 0%, rgba(56, 214, 199, .12), transparent 25rem),
         var(--bg);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     button, input, select { font: inherit; }
@@ -129,7 +131,11 @@
     .card {
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: linear-gradient(155deg, rgba(17, 39, 44, .94), rgba(10, 24, 28, .96));
+      background: linear-gradient(
+        155deg,
+        rgba(17, 39, 44, .94),
+        rgba(10, 24, 28, .96)
+      );
       box-shadow: var(--shadow);
     }
 
@@ -176,11 +182,18 @@
       color: var(--text);
       background: rgba(255, 255, 255, .035);
       font-weight: 750;
-      transition: transform .16s ease, border-color .16s ease, background .16s ease;
+      transition: transform .16s ease, border-color .16s ease,
+        background .16s ease;
     }
 
-    .btn:hover { transform: translateY(-1px); border-color: #45656d; }
-    .btn:focus-visible, input:focus-visible, select:focus-visible {
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: #45656d;
+    }
+
+    .btn:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
       outline: 3px solid rgba(56, 214, 199, .3);
       outline-offset: 2px;
     }
@@ -192,12 +205,38 @@
     }
 
     .btn.secondary { background: rgba(47, 140, 255, .12); }
-    .btn.danger { color: #ffdce0; border-color: rgba(255, 107, 120, .35); }
-    .btn.small { min-height: 38px; padding: 0 13px; border-radius: 11px; font-size: .88rem; }
-    .btn:disabled { cursor: not-allowed; opacity: .45; transform: none; }
 
-    .file-label { position: relative; overflow: hidden; }
-    .file-label input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .btn.danger {
+      color: #ffdce0;
+      border-color: rgba(255, 107, 120, .35);
+    }
+
+    .btn.small {
+      min-height: 38px;
+      padding: 0 13px;
+      border-radius: 11px;
+      font-size: .88rem;
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: .45;
+      transform: none;
+    }
+
+    .file-label {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .file-label input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
 
     .stats {
       display: grid;
@@ -217,8 +256,16 @@
       background: rgba(0, 0, 0, .13);
     }
 
-    .stat strong { font-size: clamp(1.7rem, 3vw, 2.5rem); letter-spacing: -.06em; }
-    .stat span { margin-top: 3px; color: var(--muted); font-size: .82rem; }
+    .stat strong {
+      font-size: clamp(1.7rem, 3vw, 2.5rem);
+      letter-spacing: -.06em;
+    }
+
+    .stat span {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .82rem;
+    }
 
     .grid {
       display: grid;
@@ -262,7 +309,7 @@
 
     .code-item {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: 12px;
       align-items: center;
       padding: 15px;
@@ -280,9 +327,29 @@
       letter-spacing: .08em;
     }
 
-    .code-item h4 { margin: 0 0 3px; font-size: .98rem; }
-    .code-item p { margin: 0; color: var(--muted); font-size: .8rem; }
-    .empty { padding: 26px 12px; color: var(--muted); text-align: center; }
+    .code-item h4 {
+      margin: 0 0 3px;
+      font-size: .98rem;
+      overflow-wrap: anywhere;
+    }
+
+    .code-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    .code-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .empty {
+      padding: 26px 12px;
+      color: var(--muted);
+      text-align: center;
+    }
 
     .editor-empty {
       display: grid;
@@ -293,7 +360,13 @@
       text-align: center;
     }
 
-    .editor-empty strong { display: block; margin-bottom: 7px; color: var(--text); font-size: 1.15rem; }
+    .editor-empty strong {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--text);
+      font-size: 1.15rem;
+    }
+
     .hidden { display: none !important; }
 
     .form-grid {
@@ -304,9 +377,15 @@
     }
 
     .field { display: grid; gap: 7px; min-width: 0; }
-    .field label { color: var(--muted); font-size: .8rem; font-weight: 750; }
 
-    .field input, .field select {
+    .field label {
+      color: var(--muted);
+      font-size: .8rem;
+      font-weight: 750;
+    }
+
+    .field input,
+    .field select {
       width: 100%;
       height: 48px;
       padding: 0 14px;
@@ -316,8 +395,16 @@
       background: #0a191d;
     }
 
-    .code-control { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
-    .code-control .btn { min-width: 48px; padding: 0 12px; }
+    .code-control {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+    }
+
+    .code-control .btn {
+      min-width: 48px;
+      padding: 0 12px;
+    }
 
     .sources-toolbar {
       display: flex;
@@ -330,7 +417,12 @@
     }
 
     .sources-toolbar strong { display: block; }
-    .sources-toolbar small { display: block; margin-top: 3px; color: var(--muted); }
+
+    .sources-toolbar small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+    }
 
     .sources { display: grid; gap: 14px; margin-top: 14px; }
 
@@ -390,9 +482,7 @@
       font-size: 1.2rem;
     }
 
-    .remove-source {
-      align-self: end;
-    }
+    .remove-source { align-self: end; }
 
     .editor-actions {
       display: flex;
@@ -443,13 +533,31 @@
     }
 
     @media (max-width: 700px) {
-      .shell { width: min(100% - 24px, 1440px); padding-top: 20px; }
-      .topbar { align-items: flex-start; flex-direction: column; }
+      .shell {
+        width: min(100% - 24px, 1440px);
+        padding-top: 20px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
       .intro, .section { padding: 18px; }
       .stats { grid-template-columns: 1fr; }
       .stat { min-height: 82px; }
-      .form-grid, .source-head, .server-row { grid-template-columns: 1fr; }
-      .sources-toolbar { align-items: stretch; flex-direction: column; }
+
+      .form-grid,
+      .source-head,
+      .server-row {
+        grid-template-columns: 1fr;
+      }
+
+      .sources-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
       .sources-toolbar .btn { width: 100%; }
       .source-index { display: none; }
       .remove-server { width: 100%; }
@@ -457,16 +565,19 @@
     }
   </style>
 </head>
+
 <body>
   <main class="shell">
     <header class="topbar">
       <div class="brand">
         <div class="brand-mark" aria-hidden="true"></div>
+
         <div>
           <h1>Nexo Play</h1>
           <p>Gerador de códigos e fontes</p>
         </div>
       </div>
+
       <div class="source-state" role="status" aria-live="polite">
         <span id="stateDot" class="state-dot"></span>
         <span id="stateText">Carregando arquivo publicado…</span>
@@ -476,23 +587,54 @@
     <section class="hero">
       <article class="card intro">
         <span class="eyebrow">Configuração central</span>
+
         <h2>Atualize seus códigos sem apagar o que já existe.</h2>
-        <p>O gerador lê o JSON publicado, permite criar ou editar códigos com até quatro fontes e baixa um novo arquivo completo, pronto para substituir o atual.</p>
+
+        <p>
+          O gerador lê o JSON publicado, permite criar, editar ou excluir
+          códigos com até quatro fontes e baixa um novo arquivo completo,
+          pronto para substituir o atual.
+        </p>
+
         <div class="actions">
-          <button id="newCodeTop" class="btn primary" type="button">Adicionar código</button>
-          <button id="reloadOnline" class="btn secondary" type="button">Ler novamente da internet</button>
+          <button id="newCodeTop" class="btn primary" type="button">
+            Adicionar código
+          </button>
+
+          <button id="reloadOnline" class="btn secondary" type="button">
+            Ler novamente da internet
+          </button>
+
           <label class="btn file-label">
             Carregar JSON do computador
-            <input id="localFile" type="file" accept="application/json,.json">
+            <input
+              id="localFile"
+              type="file"
+              accept="application/json,.json"
+            >
           </label>
-          <button id="downloadCurrent" class="btn" type="button" disabled>Baixar JSON atual</button>
+
+          <button id="downloadCurrent" class="btn" type="button" disabled>
+            Baixar JSON atual
+          </button>
         </div>
       </article>
 
       <aside class="card stats" aria-label="Resumo do arquivo">
-        <div class="stat"><strong id="codeCount">0</strong><span>códigos</span></div>
-        <div class="stat"><strong id="sourceCount">0</strong><span>fontes</span></div>
-        <div class="stat"><strong id="serverCount">0</strong><span>servidores</span></div>
+        <div class="stat">
+          <strong id="codeCount">0</strong>
+          <span>códigos</span>
+        </div>
+
+        <div class="stat">
+          <strong id="sourceCount">0</strong>
+          <span>fontes</span>
+        </div>
+
+        <div class="stat">
+          <strong id="serverCount">0</strong>
+          <span>servidores</span>
+        </div>
       </aside>
     </section>
 
@@ -501,11 +643,22 @@
         <div class="section-head">
           <div>
             <h3>Códigos existentes</h3>
-            <small>Selecione um para editar</small>
+            <small>Selecione um para editar ou excluir</small>
           </div>
-          <button id="newCodeSide" class="btn small primary" type="button">Novo</button>
+
+          <button id="newCodeSide" class="btn small primary" type="button">
+            Novo
+          </button>
         </div>
-        <input id="codeSearch" class="search" type="search" placeholder="Buscar código ou nome" aria-label="Buscar código ou nome">
+
+        <input
+          id="codeSearch"
+          class="search"
+          type="search"
+          placeholder="Buscar código ou nome"
+          aria-label="Buscar código ou nome"
+        >
+
         <div id="codeList" class="code-list">
           <div class="empty">Aguardando o arquivo publicado…</div>
         </div>
@@ -523,42 +676,85 @@
           <div class="section-head">
             <div>
               <h3 id="editorTitle">Adicionar código</h3>
-              <small id="editorSubtitle">O código será incluído no arquivo atual.</small>
+              <small id="editorSubtitle">
+                O código será incluído no arquivo atual.
+              </small>
             </div>
           </div>
 
           <div class="form-grid">
             <div class="field">
               <label for="codeInput">Código de 4 dígitos</label>
+
               <div class="code-control">
-                <input id="codeInput" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" autocomplete="off" aria-describedby="codeHelp">
-                <button id="regenerateCode" class="btn" type="button" title="Gerar outro código">↻</button>
+                <input
+                  id="codeInput"
+                  inputmode="numeric"
+                  maxlength="4"
+                  pattern="[0-9]{4}"
+                  autocomplete="off"
+                  aria-describedby="codeHelp"
+                >
+
+                <button
+                  id="regenerateCode"
+                  class="btn"
+                  type="button"
+                  title="Gerar outro código"
+                >↻</button>
               </div>
             </div>
+
             <div class="field">
               <label for="mainName">Nome principal</label>
-              <input id="mainName" maxlength="80" placeholder="Ex.: Nexo Play">
+              <input
+                id="mainName"
+                maxlength="80"
+                placeholder="Ex.: Nexo Play"
+              >
             </div>
           </div>
-          <small id="codeHelp" class="hidden">Use exatamente quatro números.</small>
+
+          <small id="codeHelp" class="hidden">
+            Use exatamente quatro números.
+          </small>
 
           <div class="sources-toolbar">
             <div>
               <strong>Fontes do código</strong>
               <small>Adicione individualmente até quatro fontes.</small>
             </div>
-            <button id="addSource" class="btn small secondary" type="button">+ Adicionar fonte</button>
+
+            <button
+              id="addSource"
+              class="btn small secondary"
+              type="button"
+            >
+              + Adicionar fonte
+            </button>
           </div>
 
           <div id="sources" class="sources"></div>
 
           <div class="notice">
-            O arquivo contém apenas códigos, fontes e servidores. Usuário e senha continuam sendo digitados no aplicativo e não são gravados aqui.
+            O arquivo contém apenas códigos, fontes e servidores.
+            Usuário e senha continuam sendo digitados no aplicativo
+            e não são gravados aqui.
           </div>
 
           <div class="editor-actions">
-            <button id="cancelEdit" class="btn" type="button">Cancelar</button>
-            <button id="generateJson" class="btn primary" type="submit" disabled>Gerar e baixar JSON atualizado</button>
+            <button id="cancelEdit" class="btn" type="button">
+              Cancelar
+            </button>
+
+            <button
+              id="generateJson"
+              class="btn primary"
+              type="submit"
+              disabled
+            >
+              Gerar e baixar JSON atualizado
+            </button>
           </div>
         </form>
       </section>
@@ -571,7 +767,9 @@
     (() => {
       "use strict";
 
-      const CONFIG_URL = "https://tvonplus.github.io/app/nexo_play_codigos.json";
+      const CONFIG_URL =
+        "https://tvonplus.github.io/app/nexo_play_codigos.json";
+
       const OUTPUT_FILE = "nexo_play_codigos.json";
 
       const els = {
@@ -622,14 +820,18 @@
       function normalizeServer(server) {
         return {
           serverName: text(server && server.serverName),
-          serverHost: text(server && server.serverHost).replace(/\/+$/, "")
+          serverHost: text(server && server.serverHost)
+            .replace(/\/+$/, "")
         };
       }
 
       function normalizeSource(source, fallbackName) {
         const servers = Array.isArray(source && source.servidores)
-          ? source.servidores.map(normalizeServer).filter(item => item.serverName || item.serverHost)
+          ? source.servidores
+              .map(normalizeServer)
+              .filter(item => item.serverName || item.serverHost)
           : [];
+
         return {
           nomeFonte: text(source && source.nomeFonte) || fallbackName,
           servidores: servers
@@ -637,23 +839,41 @@
       }
 
       function normalizeEntry(entry) {
-        const safeEntry = entry && typeof entry === "object" ? entry : {};
+        const safeEntry =
+          entry && typeof entry === "object" ? entry : {};
+
         let fontes = [];
 
         if (Array.isArray(safeEntry.fontes)) {
-          fontes = safeEntry.fontes.map((source, index) => normalizeSource(source, `Fonte ${index + 1}`));
+          fontes = safeEntry.fontes.map((source, index) =>
+            normalizeSource(source, `Fonte ${index + 1}`)
+          );
         } else if (Array.isArray(safeEntry.servidores)) {
           const grouped = new Map();
+
           safeEntry.servidores.forEach(server => {
-            const sourceName = text(server && server.fonte) || text(safeEntry.nomePrincipal) || "Fonte 1";
-            if (!grouped.has(sourceName)) grouped.set(sourceName, []);
+            const sourceName =
+              text(server && server.fonte) ||
+              text(safeEntry.nomePrincipal) ||
+              "Fonte 1";
+
+            if (!grouped.has(sourceName)) {
+              grouped.set(sourceName, []);
+            }
+
             grouped.get(sourceName).push(normalizeServer(server));
           });
-          fontes = [...grouped.entries()].map(([nomeFonte, servidores]) => ({ nomeFonte, servidores }));
+
+          fontes = [...grouped.entries()].map(
+            ([nomeFonte, servidores]) => ({ nomeFonte, servidores })
+          );
         }
 
         if (!fontes.length) {
-          fontes = [{ nomeFonte: text(safeEntry.nomePrincipal) || "Fonte 1", servidores: [] }];
+          fontes = [{
+            nomeFonte: text(safeEntry.nomePrincipal) || "Fonte 1",
+            servidores: []
+          }];
         }
 
         return {
@@ -668,43 +888,84 @@
         }
 
         const rawCodes = raw.codigos;
-        if (!rawCodes || typeof rawCodes !== "object" || Array.isArray(rawCodes)) {
+
+        if (
+          !rawCodes ||
+          typeof rawCodes !== "object" ||
+          Array.isArray(rawCodes)
+        ) {
           throw new Error("O arquivo não possui a área ‘codigos’.");
         }
 
-        const normalized = { ...raw, versao: Number(raw.versao) || 1, codigos: {} };
+        const normalized = {
+          ...raw,
+          versao: Number(raw.versao) || 1,
+          codigos: {}
+        };
+
         Object.entries(rawCodes).forEach(([rawCode, entry]) => {
           const digits = String(rawCode).replace(/\D/g, "");
-          const code = digits.length <= 4 ? digits.padStart(4, "0") : String(rawCode);
+
+          const code = digits.length <= 4
+            ? digits.padStart(4, "0")
+            : String(rawCode);
+
           normalized.codigos[code] = normalizeEntry(entry);
         });
+
         return normalized;
       }
 
       function updateState(type, message) {
-        els.stateDot.className = `state-dot${type ? ` ${type}` : ""}`;
+        els.stateDot.className =
+          `state-dot${type ? ` ${type}` : ""}`;
+
         els.stateText.textContent = message;
       }
 
       function showToast(message, isError = false) {
         clearTimeout(toastTimer);
+
         els.toast.textContent = message;
-        els.toast.className = `toast show${isError ? " error" : ""}`;
-        toastTimer = setTimeout(() => { els.toast.className = "toast"; }, 3800);
+        els.toast.className =
+          `toast show${isError ? " error" : ""}`;
+
+        toastTimer = setTimeout(() => {
+          els.toast.className = "toast";
+        }, 3800);
       }
 
       function getTotals() {
         const entries = Object.values(catalog.codigos || {});
+
         return entries.reduce((totals, entry) => {
-          const sources = Array.isArray(entry.fontes) ? entry.fontes : [];
+          const sources = Array.isArray(entry.fontes)
+            ? entry.fontes
+            : [];
+
           totals.fontes += sources.length;
-          totals.servidores += sources.reduce((sum, source) => sum + (Array.isArray(source.servidores) ? source.servidores.length : 0), 0);
+
+          totals.servidores += sources.reduce(
+            (sum, source) =>
+              sum + (
+                Array.isArray(source.servidores)
+                  ? source.servidores.length
+                  : 0
+              ),
+            0
+          );
+
           return totals;
-        }, { codigos: entries.length, fontes: 0, servidores: 0 });
+        }, {
+          codigos: entries.length,
+          fontes: 0,
+          servidores: 0
+        });
       }
 
       function refreshSummary() {
         const totals = getTotals();
+
         els.codeCount.textContent = totals.codigos;
         els.sourceCount.textContent = totals.fontes;
         els.serverCount.textContent = totals.servidores;
@@ -714,27 +975,79 @@
 
       function renderCodeList() {
         const query = els.codeSearch.value.trim().toLowerCase();
+
         const entries = Object.entries(catalog.codigos || {})
-          .sort(([a], [b]) => a.localeCompare(b, "pt-BR", { numeric: true }))
-          .filter(([code, entry]) => `${code} ${entry.nomePrincipal}`.toLowerCase().includes(query));
+          .sort(([a], [b]) =>
+            a.localeCompare(b, "pt-BR", { numeric: true })
+          )
+          .filter(([code, entry]) =>
+            `${code} ${entry.nomePrincipal}`
+              .toLowerCase()
+              .includes(query)
+          );
 
         if (!entries.length) {
-          els.codeList.innerHTML = `<div class="empty">${dataReady ? "Nenhum código encontrado." : "Aguardando o arquivo publicado…"}</div>`;
+          els.codeList.innerHTML = `
+            <div class="empty">
+              ${
+                dataReady
+                  ? "Nenhum código encontrado."
+                  : "Aguardando o arquivo publicado…"
+              }
+            </div>
+          `;
           return;
         }
 
         els.codeList.innerHTML = entries.map(([code, entry]) => {
-          const sources = Array.isArray(entry.fontes) ? entry.fontes : [];
-          const servers = sources.reduce((sum, source) => sum + (source.servidores || []).length, 0);
+          const sources = Array.isArray(entry.fontes)
+            ? entry.fontes
+            : [];
+
+          const servers = sources.reduce(
+            (sum, source) => sum + (source.servidores || []).length,
+            0
+          );
+
           return `
             <article class="code-item">
               <div>
-                <span class="code-number">${escapeHtml(code)}</span>
+                <span class="code-number">
+                  ${escapeHtml(code)}
+                </span>
+
                 <h4>${escapeHtml(entry.nomePrincipal)}</h4>
-                <p>${sources.length} fonte${sources.length === 1 ? "" : "s"} · ${servers} servidor${servers === 1 ? "" : "es"}</p>
+
+                <p>
+                  ${sources.length}
+                  fonte${sources.length === 1 ? "" : "s"}
+                  ·
+                  ${servers}
+                  servidor${servers === 1 ? "" : "es"}
+                </p>
               </div>
-              <button class="btn small edit-code" type="button" data-code="${escapeHtml(code)}">Editar</button>
-            </article>`;
+
+              <div class="code-actions">
+                <button
+                  class="btn small edit-code"
+                  type="button"
+                  data-code="${escapeHtml(code)}"
+                  ${!dataReady ? "disabled" : ""}
+                >
+                  Editar
+                </button>
+
+                <button
+                  class="btn small danger delete-code"
+                  type="button"
+                  data-code="${escapeHtml(code)}"
+                  ${!dataReady ? "disabled" : ""}
+                >
+                  Excluir código
+                </button>
+              </div>
+            </article>
+          `;
         }).join("");
       }
 
@@ -747,27 +1060,57 @@
 
       async function loadOnline() {
         updateState("", "Lendo arquivo publicado…");
+
         try {
           const separator = CONFIG_URL.includes("?") ? "&" : "?";
-          const response = await fetch(`${CONFIG_URL}${separator}t=${Date.now()}`, { cache: "no-store" });
-          if (!response.ok) throw new Error(`Resposta ${response.status}`);
-          catalog = normalizeCatalog(await response.json());
+
+          const response = await fetch(
+            `${CONFIG_URL}${separator}t=${Date.now()}`,
+            { cache: "no-store" }
+          );
+
+          if (!response.ok) {
+            throw new Error(`Resposta ${response.status}`);
+          }
+
+          const loadedCatalog = normalizeCatalog(await response.json());
+
+          catalog = loadedCatalog;
+          closeEditor();
           markReady("Arquivo online carregado");
           showToast("JSON publicado carregado com sucesso.");
         } catch (error) {
-          dataReady = false;
+          // Mantém o catálogo já carregado, caso exista.
           refreshSummary();
           renderCodeList();
-          updateState("error", "Não foi possível ler o arquivo online");
-          showToast("Falha ao carregar. Use ‘Carregar JSON do computador’ para continuar sem perder dados.", true);
+
+          updateState(
+            "error",
+            dataReady
+              ? "Falha ao atualizar; arquivo anterior mantido"
+              : "Não foi possível ler o arquivo online"
+          );
+
+          showToast(
+            dataReady
+              ? "Falha ao carregar da internet. O arquivo atual foi mantido."
+              : "Falha ao carregar. Use ‘Carregar JSON do computador’ para continuar.",
+            true
+          );
         }
       }
 
       function loadLocalFile(file) {
         const reader = new FileReader();
+
         reader.onload = () => {
           try {
-            catalog = normalizeCatalog(JSON.parse(reader.result));
+            const loadedCatalog = normalizeCatalog(
+              JSON.parse(reader.result)
+            );
+
+            catalog = loadedCatalog;
+            closeEditor();
             markReady(`Arquivo local carregado: ${file.name}`);
             showToast("Arquivo local carregado com sucesso.");
           } catch (error) {
@@ -776,114 +1119,238 @@
             els.localFile.value = "";
           }
         };
-        reader.onerror = () => showToast("Não foi possível ler o arquivo escolhido.", true);
+
+        reader.onerror = () => {
+          els.localFile.value = "";
+          showToast("Não foi possível ler o arquivo escolhido.", true);
+        };
+
         reader.readAsText(file, "utf-8");
       }
 
       function generateUniqueCode() {
         const used = new Set(Object.keys(catalog.codigos || {}));
-        if (used.size >= 9999) throw new Error("Não há códigos livres disponíveis.");
-
         const random = new Uint32Array(1);
-        for (let attempt = 0; attempt < 20000; attempt += 1) {
-          crypto.getRandomValues(random);
-          const number = (random[0] % 9999) + 1;
+
+        crypto.getRandomValues(random);
+
+        const start = random[0] % 9999;
+
+        for (let offset = 0; offset < 9999; offset += 1) {
+          const number = ((start + offset) % 9999) + 1;
           const code = String(number).padStart(4, "0");
-          if (!used.has(code) || code === editingOriginalCode) return code;
+
+          if (!used.has(code) || code === editingOriginalCode) {
+            return code;
+          }
         }
-        throw new Error("Não foi possível gerar um código livre.");
+
+        throw new Error("Não há códigos livres disponíveis.");
       }
 
       function blankSource(index) {
         return {
           nomeFonte: `Fonte ${index + 1}`,
-          servidores: [{ serverName: "", serverHost: "" }]
+          servidores: [{
+            serverName: "",
+            serverHost: ""
+          }]
         };
       }
 
       function openNewEditor() {
         if (!dataReady) {
-          showToast("Aguarde o JSON online ou carregue um arquivo do computador.", true);
+          showToast(
+            "Aguarde o JSON online ou carregue um arquivo do computador.",
+            true
+          );
           return;
         }
-        editingOriginalCode = null;
-        sourceDrafts = [blankSource(0)];
-        els.editorTitle.textContent = "Adicionar código";
-        els.editorSubtitle.textContent = "O novo código será somado a todos os códigos atuais.";
-        els.codeInput.value = generateUniqueCode();
-        els.mainName.value = "Nexo Play";
-        showEditor();
+
+        try {
+          const code = generateUniqueCode();
+
+          editingOriginalCode = null;
+          sourceDrafts = [blankSource(0)];
+
+          els.editorTitle.textContent = "Adicionar código";
+          els.editorSubtitle.textContent =
+            "O novo código será somado a todos os códigos atuais.";
+
+          els.codeInput.value = code;
+          els.mainName.value = "Nexo Play";
+
+          showEditor();
+        } catch (error) {
+          showToast(error.message, true);
+        }
       }
 
       function openEditEditor(code) {
-        const entry = catalog.codigos[code];
-        if (!entry) return;
-        if (entry.fontes.length > 4) {
-          showToast("Este código possui mais de quatro fontes e não pode ser editado neste gerador.", true);
+        if (!dataReady) {
+          showToast("Carregue o JSON atual antes de editar.", true);
           return;
         }
+
+        const entry = catalog.codigos[code];
+        if (!entry) return;
+
+        if (entry.fontes.length > 4) {
+          showToast(
+            "Este código possui mais de quatro fontes e não pode ser editado neste gerador.",
+            true
+          );
+          return;
+        }
+
         editingOriginalCode = code;
         sourceDrafts = clone(entry.fontes);
+
         sourceDrafts.forEach((source, index) => {
-          if (!source.servidores.length) source.servidores.push({ serverName: "", serverHost: "" });
-          if (!source.nomeFonte) source.nomeFonte = `Fonte ${index + 1}`;
+          if (!source.servidores.length) {
+            source.servidores.push({
+              serverName: "",
+              serverHost: ""
+            });
+          }
+
+          if (!source.nomeFonte) {
+            source.nomeFonte = `Fonte ${index + 1}`;
+          }
         });
+
         els.editorTitle.textContent = `Editar código ${code}`;
-        els.editorSubtitle.textContent = "As alterações substituirão somente este código no arquivo completo.";
+        els.editorSubtitle.textContent =
+          "As alterações substituirão somente este código no arquivo completo.";
+
         els.codeInput.value = code;
         els.mainName.value = entry.nomePrincipal;
+
         showEditor();
       }
 
       function showEditor() {
         els.editorEmpty.classList.add("hidden");
         els.editor.classList.remove("hidden");
+
         renderSources();
         els.codeInput.focus();
-        els.editor.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        els.editor.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
       }
 
       function closeEditor() {
         editingOriginalCode = null;
         sourceDrafts = [];
+
         els.editor.classList.add("hidden");
         els.editorEmpty.classList.remove("hidden");
       }
 
       function syncDraftsFromInputs() {
-        els.sources.querySelectorAll(".source-card").forEach((card, sourceIndex) => {
-          if (!sourceDrafts[sourceIndex]) return;
-          const sourceName = card.querySelector(".source-name");
-          sourceDrafts[sourceIndex].nomeFonte = sourceName ? sourceName.value : "";
-          sourceDrafts[sourceIndex].servidores = [...card.querySelectorAll(".server-row")].map(row => ({
-            serverName: row.querySelector(".server-name").value,
-            serverHost: row.querySelector(".server-host").value
-          }));
-        });
+        els.sources.querySelectorAll(".source-card").forEach(
+          (card, sourceIndex) => {
+            if (!sourceDrafts[sourceIndex]) return;
+
+            const sourceName = card.querySelector(".source-name");
+
+            sourceDrafts[sourceIndex].nomeFonte =
+              sourceName ? sourceName.value : "";
+
+            sourceDrafts[sourceIndex].servidores = [
+              ...card.querySelectorAll(".server-row")
+            ].map(row => ({
+              serverName: row.querySelector(".server-name").value,
+              serverHost: row.querySelector(".server-host").value
+            }));
+          }
+        );
       }
 
       function renderSources() {
-        els.sources.innerHTML = sourceDrafts.map((source, sourceIndex) => `
-          <article class="source-card" data-source-index="${sourceIndex}">
-            <div class="source-head">
-              <div class="source-index">${sourceIndex + 1}</div>
-              <div class="field">
-                <label for="source-name-${sourceIndex}">Nome da fonte</label>
-                <input id="source-name-${sourceIndex}" class="source-name" maxlength="80" value="${escapeHtml(source.nomeFonte)}" placeholder="Ex.: TV On+">
+        els.sources.innerHTML = sourceDrafts.map(
+          (source, sourceIndex) => `
+            <article
+              class="source-card"
+              data-source-index="${sourceIndex}"
+            >
+              <div class="source-head">
+                <div class="source-index">${sourceIndex + 1}</div>
+
+                <div class="field">
+                  <label for="source-name-${sourceIndex}">
+                    Nome da fonte
+                  </label>
+
+                  <input
+                    id="source-name-${sourceIndex}"
+                    class="source-name"
+                    maxlength="80"
+                    value="${escapeHtml(source.nomeFonte)}"
+                    placeholder="Ex.: TV On+"
+                  >
+                </div>
+
+                <button
+                  class="btn small add-server"
+                  type="button"
+                  data-source-index="${sourceIndex}"
+                >
+                  Adicionar servidor
+                </button>
+
+                <button
+                  class="btn small danger remove-source"
+                  type="button"
+                  data-source-index="${sourceIndex}"
+                  ${sourceDrafts.length === 1 ? "disabled" : ""}
+                >
+                  Excluir fonte
+                </button>
               </div>
-              <button class="btn small add-server" type="button" data-source-index="${sourceIndex}">Adicionar servidor</button>
-              <button class="btn small danger remove-source" type="button" data-source-index="${sourceIndex}"${sourceDrafts.length === 1 ? " disabled" : ""}>Excluir fonte</button>
-            </div>
-            <div class="server-list">
-              ${source.servidores.map((server, serverIndex) => `
-                <div class="server-row" data-server-index="${serverIndex}">
-                  <input class="server-name" maxlength="100" value="${escapeHtml(server.serverName)}" placeholder="Nome do servidor" aria-label="Nome do servidor ${serverIndex + 1} da fonte ${sourceIndex + 1}">
-                  <input class="server-host" maxlength="300" value="${escapeHtml(server.serverHost)}" placeholder="http://servidor.exemplo.com" aria-label="Endereço do servidor ${serverIndex + 1} da fonte ${sourceIndex + 1}">
-                  <button class="remove-server" type="button" data-source-index="${sourceIndex}" data-server-index="${serverIndex}" title="Remover servidor" aria-label="Remover servidor ${serverIndex + 1}">×</button>
-                </div>`).join("")}
-            </div>
-          </article>`).join("");
+
+              <div class="server-list">
+                ${source.servidores.map((server, serverIndex) => `
+                  <div
+                    class="server-row"
+                    data-server-index="${serverIndex}"
+                  >
+                    <input
+                      class="server-name"
+                      maxlength="100"
+                      value="${escapeHtml(server.serverName)}"
+                      placeholder="Nome do servidor"
+                      aria-label="Nome do servidor ${serverIndex + 1} da fonte ${sourceIndex + 1}"
+                    >
+
+                    <input
+                      class="server-host"
+                      maxlength="300"
+                      value="${escapeHtml(server.serverHost)}"
+                      placeholder="http://servidor.exemplo.com"
+                      aria-label="Endereço do servidor ${serverIndex + 1} da fonte ${sourceIndex + 1}"
+                    >
+
+                    <button
+                      class="remove-server"
+                      type="button"
+                      data-source-index="${sourceIndex}"
+                      data-server-index="${serverIndex}"
+                      title="Remover servidor"
+                      aria-label="Remover servidor ${serverIndex + 1}"
+                    >×</button>
+                  </div>
+                `).join("")}
+              </div>
+            </article>
+          `
+        ).join("");
+
         els.addSource.disabled = sourceDrafts.length >= 4;
+
         els.addSource.textContent = sourceDrafts.length >= 4
           ? "Limite de 4 fontes"
           : "+ Adicionar fonte";
@@ -891,40 +1358,69 @@
 
       function addSource() {
         syncDraftsFromInputs();
+
         if (sourceDrafts.length >= 4) {
-          showToast("Cada código pode ter no máximo quatro fontes.", true);
+          showToast(
+            "Cada código pode ter no máximo quatro fontes.",
+            true
+          );
           return;
         }
+
         sourceDrafts.push(blankSource(sourceDrafts.length));
         renderSources();
-        const newSourceName = els.sources.querySelector(`[data-source-index="${sourceDrafts.length - 1}"] .source-name`);
+
+        const newSourceName = els.sources.querySelector(
+          `[data-source-index="${sourceDrafts.length - 1}"] .source-name`
+        );
+
         if (newSourceName) newSourceName.focus();
       }
 
       function removeSource(sourceIndex) {
         syncDraftsFromInputs();
+
         if (sourceDrafts.length === 1) {
-          showToast("Cada código precisa ter pelo menos uma fonte.", true);
+          showToast(
+            "Cada código precisa ter pelo menos uma fonte.",
+            true
+          );
           return;
         }
 
         const source = sourceDrafts[sourceIndex];
         if (!source) return;
-        const sourceName = text(source.nomeFonte) || `Fonte ${sourceIndex + 1}`;
-        const hasFilledServer = source.servidores.some(server => text(server.serverName) || text(server.serverHost));
-        if (hasFilledServer && !window.confirm(`Excluir somente a fonte “${sourceName}” e os servidores dela?`)) {
+
+        const sourceName =
+          text(source.nomeFonte) || `Fonte ${sourceIndex + 1}`;
+
+        const hasFilledServer = source.servidores.some(
+          server => text(server.serverName) || text(server.serverHost)
+        );
+
+        if (
+          hasFilledServer &&
+          !window.confirm(
+            `Excluir somente a fonte “${sourceName}” e os servidores dela?`
+          )
+        ) {
           return;
         }
 
         sourceDrafts.splice(sourceIndex, 1);
+
         renderSources();
-        showToast(`Fonte “${sourceName}” excluída. As demais foram mantidas.`);
+        showToast(
+          `Fonte “${sourceName}” excluída. As demais foram mantidas.`
+        );
       }
 
       function validateUrl(value) {
         try {
           const parsed = new URL(value);
-          return parsed.protocol === "http:" || parsed.protocol === "https:";
+
+          return parsed.protocol === "http:" ||
+            parsed.protocol === "https:";
         } catch (_) {
           return false;
         }
@@ -932,142 +1428,332 @@
 
       function collectAndValidate() {
         syncDraftsFromInputs();
+
         const code = els.codeInput.value.replace(/\D/g, "");
         const mainName = text(els.mainName.value);
 
-        if (!/^\d{4}$/.test(code)) throw new Error("Digite um código com exatamente quatro números.");
-        if (!mainName) throw new Error("Informe o nome principal.");
-        if (catalog.codigos[code] && code !== editingOriginalCode) {
-          throw new Error(`O código ${code} já existe. Abra-o pelo botão Editar.`);
+        if (!/^\d{4}$/.test(code)) {
+          throw new Error(
+            "Digite um código com exatamente quatro números."
+          );
         }
-        if (!sourceDrafts.length || sourceDrafts.length > 4) throw new Error("Escolha entre uma e quatro fontes.");
+
+        if (!mainName) {
+          throw new Error("Informe o nome principal.");
+        }
+
+        if (catalog.codigos[code] && code !== editingOriginalCode) {
+          throw new Error(
+            `O código ${code} já existe. Abra-o pelo botão Editar.`
+          );
+        }
+
+        if (!sourceDrafts.length || sourceDrafts.length > 4) {
+          throw new Error("Escolha entre uma e quatro fontes.");
+        }
 
         const seenSourceNames = new Set();
         const seenHosts = new Set();
+
         const fontes = sourceDrafts.map((source, sourceIndex) => {
           const nomeFonte = text(source.nomeFonte);
-          if (!nomeFonte) throw new Error(`Informe o nome da fonte ${sourceIndex + 1}.`);
+
+          if (!nomeFonte) {
+            throw new Error(
+              `Informe o nome da fonte ${sourceIndex + 1}.`
+            );
+          }
+
           const normalizedSourceName = nomeFonte.toLowerCase();
-          if (seenSourceNames.has(normalizedSourceName)) throw new Error(`A fonte “${nomeFonte}” está repetida.`);
+
+          if (seenSourceNames.has(normalizedSourceName)) {
+            throw new Error(`A fonte “${nomeFonte}” está repetida.`);
+          }
+
           seenSourceNames.add(normalizedSourceName);
 
-          if (!source.servidores.length) throw new Error(`Adicione pelo menos um servidor na fonte “${nomeFonte}”.`);
-          const servidores = source.servidores.map((server, serverIndex) => {
-            const serverName = text(server.serverName);
-            const serverHost = text(server.serverHost).replace(/\/+$/, "");
-            if (!serverName) throw new Error(`Informe o nome do servidor ${serverIndex + 1} da fonte “${nomeFonte}”.`);
-            if (!validateUrl(serverHost)) throw new Error(`O endereço de “${serverName}” deve começar com http:// ou https://.`);
-            const normalizedHost = serverHost.toLowerCase();
-            if (seenHosts.has(normalizedHost)) throw new Error(`O endereço “${serverHost}” está repetido neste código.`);
-            seenHosts.add(normalizedHost);
-            return { serverName, serverHost };
-          });
+          if (!source.servidores.length) {
+            throw new Error(
+              `Adicione pelo menos um servidor na fonte “${nomeFonte}”.`
+            );
+          }
+
+          const servidores = source.servidores.map(
+            (server, serverIndex) => {
+              const serverName = text(server.serverName);
+              const serverHost = text(server.serverHost)
+                .replace(/\/+$/, "");
+
+              if (!serverName) {
+                throw new Error(
+                  `Informe o nome do servidor ${serverIndex + 1} da fonte “${nomeFonte}”.`
+                );
+              }
+
+              if (!validateUrl(serverHost)) {
+                throw new Error(
+                  `O endereço de “${serverName}” deve começar com http:// ou https://.`
+                );
+              }
+
+              const normalizedHost = serverHost.toLowerCase();
+
+              if (seenHosts.has(normalizedHost)) {
+                throw new Error(
+                  `O endereço “${serverHost}” está repetido neste código.`
+                );
+              }
+
+              seenHosts.add(normalizedHost);
+
+              return { serverName, serverHost };
+            }
+          );
+
           return { nomeFonte, servidores };
         });
 
-        return { code, entry: { nomePrincipal: mainName, fontes } };
+        return {
+          code,
+          entry: {
+            nomePrincipal: mainName,
+            fontes
+          }
+        };
       }
 
       function sortedCatalogForDownload() {
         const sortedCodes = {};
+
         Object.keys(catalog.codigos)
-          .sort((a, b) => a.localeCompare(b, "pt-BR", { numeric: true }))
-          .forEach(code => { sortedCodes[code] = catalog.codigos[code]; });
-        return { ...catalog, versao: Number(catalog.versao) || 1, codigos: sortedCodes };
+          .sort((a, b) =>
+            a.localeCompare(b, "pt-BR", { numeric: true })
+          )
+          .forEach(code => {
+            sortedCodes[code] = catalog.codigos[code];
+          });
+
+        return {
+          ...catalog,
+          versao: Number(catalog.versao) || 1,
+          codigos: sortedCodes
+        };
+      }
+
+      // Exclui somente o código escolhido e baixa o JSON atualizado.
+      function deleteCode(code) {
+        if (!dataReady) {
+          showToast(
+            "Carregue o JSON atual antes de excluir um código.",
+            true
+          );
+          return;
+        }
+
+        if (
+          !Object.prototype.hasOwnProperty.call(catalog.codigos, code)
+        ) {
+          return;
+        }
+
+        const entry = catalog.codigos[code];
+
+        const confirmed = window.confirm(
+          `Excluir o código ${code} — ${entry.nomePrincipal}?\n\n` +
+          "Todas as fontes e servidores desse código serão removidos. " +
+          "Os demais códigos serão mantidos.\n\n" +
+          "Após confirmar, será baixado o JSON atualizado."
+        );
+
+        if (!confirmed) return;
+
+        delete catalog.codigos[code];
+
+        if (editingOriginalCode === code) {
+          closeEditor();
+        }
+
+        refreshSummary();
+        renderCodeList();
+        downloadCatalog();
+
+        showToast(
+          `Código ${code} excluído. Download do JSON atualizado iniciado.`
+        );
       }
 
       function downloadCatalog() {
         if (!dataReady) {
-          showToast("Carregue o JSON atual antes de gerar o arquivo.", true);
+          showToast(
+            "Carregue o JSON atual antes de gerar o arquivo.",
+            true
+          );
           return;
         }
-        const output = JSON.stringify(sortedCatalogForDownload(), null, 2) + "\n";
-        const blob = new Blob([output], { type: "application/json;charset=utf-8" });
+
+        const output =
+          JSON.stringify(sortedCatalogForDownload(), null, 2) + "\n";
+
+        const blob = new Blob([output], {
+          type: "application/json;charset=utf-8"
+        });
+
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
+
         link.href = url;
         link.download = OUTPUT_FILE;
+
         document.body.appendChild(link);
         link.click();
         link.remove();
+
         setTimeout(() => URL.revokeObjectURL(url), 1500);
       }
 
-      document.getElementById("newCodeTop").addEventListener("click", openNewEditor);
-      document.getElementById("newCodeSide").addEventListener("click", openNewEditor);
-      document.getElementById("reloadOnline").addEventListener("click", loadOnline);
-      document.getElementById("cancelEdit").addEventListener("click", closeEditor);
-      els.downloadCurrent.addEventListener("click", downloadCatalog);
+      document.getElementById("newCodeTop")
+        .addEventListener("click", openNewEditor);
+
+      document.getElementById("newCodeSide")
+        .addEventListener("click", openNewEditor);
+
+      document.getElementById("reloadOnline")
+        .addEventListener("click", loadOnline);
+
+      document.getElementById("cancelEdit")
+        .addEventListener("click", closeEditor);
+
+      els.downloadCurrent.addEventListener(
+        "click",
+        downloadCatalog
+      );
+
       els.codeSearch.addEventListener("input", renderCodeList);
 
       els.localFile.addEventListener("change", event => {
         const file = event.target.files && event.target.files[0];
+
         if (file) loadLocalFile(file);
       });
 
       els.codeInput.addEventListener("input", () => {
-        els.codeInput.value = els.codeInput.value.replace(/\D/g, "").slice(0, 4);
+        els.codeInput.value = els.codeInput.value
+          .replace(/\D/g, "")
+          .slice(0, 4);
       });
 
-      document.getElementById("regenerateCode").addEventListener("click", () => {
-        try {
-          els.codeInput.value = generateUniqueCode();
-        } catch (error) {
-          showToast(error.message, true);
-        }
-      });
+      document.getElementById("regenerateCode")
+        .addEventListener("click", () => {
+          try {
+            els.codeInput.value = generateUniqueCode();
+          } catch (error) {
+            showToast(error.message, true);
+          }
+        });
 
       els.addSource.addEventListener("click", addSource);
 
       els.codeList.addEventListener("click", event => {
-        const button = event.target.closest(".edit-code");
-        if (button) openEditEditor(button.dataset.code);
+        const deleteButton = event.target.closest(".delete-code");
+
+        if (deleteButton) {
+          deleteCode(deleteButton.dataset.code);
+          return;
+        }
+
+        const editButton = event.target.closest(".edit-code");
+
+        if (editButton) {
+          openEditEditor(editButton.dataset.code);
+        }
       });
 
       els.sources.addEventListener("click", event => {
-        const removeSourceButton = event.target.closest(".remove-source");
+        const removeSourceButton =
+          event.target.closest(".remove-source");
+
         if (removeSourceButton) {
-          removeSource(Number(removeSourceButton.dataset.sourceIndex));
+          removeSource(
+            Number(removeSourceButton.dataset.sourceIndex)
+          );
           return;
         }
 
         const addButton = event.target.closest(".add-server");
+
         if (addButton) {
           syncDraftsFromInputs();
-          const sourceIndex = Number(addButton.dataset.sourceIndex);
-          sourceDrafts[sourceIndex].servidores.push({ serverName: "", serverHost: "" });
+
+          const sourceIndex =
+            Number(addButton.dataset.sourceIndex);
+
+          sourceDrafts[sourceIndex].servidores.push({
+            serverName: "",
+            serverHost: ""
+          });
+
           renderSources();
           return;
         }
 
-        const removeButton = event.target.closest(".remove-server");
+        const removeButton =
+          event.target.closest(".remove-server");
+
         if (removeButton) {
           syncDraftsFromInputs();
-          const sourceIndex = Number(removeButton.dataset.sourceIndex);
-          const serverIndex = Number(removeButton.dataset.serverIndex);
+
+          const sourceIndex =
+            Number(removeButton.dataset.sourceIndex);
+
+          const serverIndex =
+            Number(removeButton.dataset.serverIndex);
+
           if (sourceDrafts[sourceIndex].servidores.length === 1) {
-            showToast("Cada fonte precisa ter pelo menos um servidor.", true);
+            showToast(
+              "Cada fonte precisa ter pelo menos um servidor.",
+              true
+            );
             return;
           }
-          sourceDrafts[sourceIndex].servidores.splice(serverIndex, 1);
+
+          sourceDrafts[sourceIndex].servidores.splice(
+            serverIndex,
+            1
+          );
+
           renderSources();
         }
       });
 
       els.editor.addEventListener("submit", event => {
         event.preventDefault();
+
         if (!dataReady) return;
+
         try {
           const { code, entry } = collectAndValidate();
-          if (editingOriginalCode && editingOriginalCode !== code) delete catalog.codigos[editingOriginalCode];
+
+          if (
+            editingOriginalCode &&
+            editingOriginalCode !== code
+          ) {
+            delete catalog.codigos[editingOriginalCode];
+          }
+
           catalog.codigos[code] = entry;
           editingOriginalCode = code;
+
           els.editorTitle.textContent = `Editar código ${code}`;
-          els.editorSubtitle.textContent = "As alterações foram aplicadas ao arquivo que será baixado.";
+          els.editorSubtitle.textContent =
+            "As alterações foram aplicadas ao arquivo que será baixado.";
+
           refreshSummary();
           renderCodeList();
           downloadCatalog();
-          showToast(`Código ${code} salvo. O JSON atualizado foi baixado.`);
+
+          showToast(
+            `Código ${code} salvo. Download do JSON atualizado iniciado.`
+          );
         } catch (error) {
           showToast(error.message, true);
         }
