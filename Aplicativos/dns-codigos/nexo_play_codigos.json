@@ -1,36 +1,6 @@
 {
   "versao": 1,
   "codigos": {
-    "1111": {
-      "nomePrincipal": "Nexo Play",
-      "fontes": [
-        {
-          "nomeFonte": "Nexo Play",
-          "servidores": [
-            {
-              "serverName": "Explosion",
-              "serverHost": "http://fastbr.site"
-            },
-            {
-              "serverName": "Seven",
-              "serverHost": "http://premiotv.fun"
-            },
-            {
-              "serverName": "Atena",
-              "serverHost": "http://atenaplay.lat"
-            },
-            {
-              "serverName": "Galaxy",
-              "serverHost": "http://anbinvlink.fun"
-            },
-            {
-              "serverName": "Speed",
-              "serverHost": "http://p2cat.shop"
-            }
-          ]
-        }
-      ]
-    },
     "2102": {
       "nomePrincipal": "TV On+",
       "fontes": [
@@ -61,49 +31,40 @@
         }
       ]
     },
-    "6659": {
-      "nomePrincipal": "Aloka",
+    "3625": {
+      "nomePrincipal": "Lucas",
       "fontes": [
         {
-          "nomeFonte": "Um servidor",
+          "nomeFonte": "Bravo",
           "servidores": [
             {
-              "serverName": "alo",
-              "serverHost": "http://sevenconect.lat"
+              "serverName": "Bravohub",
+              "serverHost": "https://ukobach.shop"
             },
             {
-              "serverName": "terra",
-              "serverHost": "http://netuno.live"
-            },
-            {
-              "serverName": "lua",
-              "serverHost": "http://new-link.shop"
+              "serverName": "Royale",
+              "serverHost": "https://royaleserver.online"
             }
           ]
-        }
-      ]
-    },
-    "9999": {
-      "nomePrincipal": "TESTES",
-      "fontes": [
+        },
         {
           "nomeFonte": "NetPlay",
           "servidores": [
             {
               "serverName": "Seven",
-              "serverHost": "http://sevenconect.lat"
+              "serverHost": "http://premiotv.fun"
             },
             {
               "serverName": "Speed",
-              "serverHost": "http://netuno.live"
+              "serverHost": "http://p2cat.shop"
             },
             {
               "serverName": "Galaxy",
-              "serverHost": "http://new-link.shop"
+              "serverHost": "http://anbinvlink.fun"
             },
             {
               "serverName": "Explosion",
-              "serverHost": "http://fasttv.sbs"
+              "serverHost": "http://lineout.site"
             },
             {
               "serverName": "Atena",
