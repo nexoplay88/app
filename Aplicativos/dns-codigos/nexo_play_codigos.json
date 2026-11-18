@@ -28,6 +28,15 @@
               "serverHost": "http://premiotv.fun"
             }
           ]
+        },
+        {
+          "nomeFonte": "NexoPlay",
+          "servidores": [
+            {
+              "serverName": "Athena",
+              "serverHost": "https://lineout.site:80"
+            }
+          ]
         }
       ]
     },
