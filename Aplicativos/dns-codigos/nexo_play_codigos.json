@@ -13,19 +13,19 @@
             },
             {
               "serverName": "Speed",
-              "serverHost": "http://blackvizion.shop"
+              "serverHost": "http://p2cat.shop"
             },
             {
               "serverName": "Galaxy",
-              "serverHost": "http://anbinvlink.fun"
+              "serverHost": "http://inconectlink2.fun"
             },
             {
               "serverName": "Atena",
-              "serverHost": "http://atenaplay.lat"
+              "serverHost": "http://skconectlink2.fun"
             },
             {
               "serverName": "Seven",
-              "serverHost": "http://premiotv.fun"
+              "serverHost": "http://anconectlink2.fun"
             }
           ]
         }
@@ -52,7 +52,7 @@
           "servidores": [
             {
               "serverName": "Seven",
-              "serverHost": "http://premiotv.fun"
+              "serverHost": "http://anconectlink2.fun"
             },
             {
               "serverName": "Speed",
@@ -60,7 +60,7 @@
             },
             {
               "serverName": "Galaxy",
-              "serverHost": "http://anbinvlink.fun"
+              "serverHost": "http://inconectlink2.fun"
             },
             {
               "serverName": "Explosion",
@@ -68,7 +68,7 @@
             },
             {
               "serverName": "Atena",
-              "serverHost": "http://atenaplay.lat"
+              "serverHost": "http://skconectlink2.fun"
             }
           ]
         }
