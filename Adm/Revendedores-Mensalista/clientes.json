@@ -1,6 +1,6 @@
 {
   "versao": 1,
-  "atualizadoEm": "2026-11-18T20:42:18.551Z",
+  "atualizadoEm": "2026-11-19T12:46:12.936482Z",
   "clientes": [
     {
       "id": "1b845e1c-9481-4929-aec5-b8f8966507f3",
@@ -133,6 +133,25 @@
         "2026-11": {
           "pago": 0,
           "atualizadoEm": "2026-11-18T15:00:00.000Z"
+        }
+      }
+    },
+    {
+      "id": "36fb4690870e41d5a03ab85b95a53ff8",
+      "nome": "Matheus Andrade",
+      "usuario": "matheus.tora996@gmail.com",
+      "whatsapp": "54992680868",
+      "mensalidade": 200.0,
+      "vencimento": 10,
+      "ativo": true,
+      "pagamentos": {
+        "2026-11": {
+          "pago": 200.0,
+          "atualizadoEm": "2026-11-19T12:45:39.371984Z"
+        },
+        "2026-12": {
+          "pago": 200.0,
+          "atualizadoEm": "2026-11-19T12:46:03.987385Z"
         }
       }
     }
