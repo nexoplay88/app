@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "ativo": true,
+  "versao": "1.039",
+  "widgetId": "NexoPlayHDLegacy",
+  "titulo": "Nexo Play",
+  "descricao": "Samsung Legacy: codigos via jsDelivr na branch main",
+  "arquivo": "https://nexoplay88.github.io/app/Aplicativos/Sangung-antigo/NexoPlay_Samsung_v1.039.zip",
+  "sha256": "D3B8BEAE4485F4BCD522B078EF1FB6443372D57DF87DD81224FDB5CDA32FA0E2",
+  "tamanho": 279443
+}
