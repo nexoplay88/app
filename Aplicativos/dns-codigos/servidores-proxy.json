@@ -10,25 +10,25 @@
     },
     "atena": {
       "publicHost": "atena-nexo.duckdns.org",
-      "origin": "http://atenaplay.lat",
+      "origin": "http://skconectlink2.fun",
       "m3uPath": "/get.php",
       "enabled": true
     },
     "galaxy": {
       "publicHost": "galaxy-nexo.duckdns.org",
-      "origin": "http://anbinvlink.fun",
+      "origin": "http://inconectlink2.fun",
       "m3uPath": "/get.php",
       "enabled": true
     },
     "seven": {
       "publicHost": "seven-nexo.duckdns.org",
-      "origin": "http://premiotv.fun",
+      "origin": "http://anconectlink2.fun",
       "m3uPath": "/get.php",
       "enabled": true
     },
     "speed": {
       "publicHost": "speed-nexo.duckdns.org",
-      "origin": "http://blackvizion.shop",
+      "origin": "http://p2cat.shop",
       "m3uPath": "/get.php",
       "enabled": true
     }
