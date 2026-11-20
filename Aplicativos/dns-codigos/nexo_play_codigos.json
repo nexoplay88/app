@@ -28,6 +28,15 @@
               "serverHost": "http://anconectlink2.fun"
             }
           ]
+        },
+        {
+          "nomeFonte": "NexoPlay",
+          "servidores": [
+            {
+              "serverName": "Speed",
+              "serverHost": "http://p2cat.shop:80"
+            }
+          ]
         }
       ]
     },
