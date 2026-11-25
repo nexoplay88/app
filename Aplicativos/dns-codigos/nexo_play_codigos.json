@@ -100,7 +100,7 @@
           "servidores": [
             {
               "serverName": "Max",
-              "serverHost": "http://maxtvblack.m3ucolletor.com"
+              "serverHost": "http://maxtvblack.m3ucollector.com"
             }
           ]
         }
