@@ -91,6 +91,20 @@
           ]
         }
       ]
+    },
+    "3010": {
+      "nomePrincipal": "MaxTv",
+      "fontes": [
+        {
+          "nomeFonte": "Max",
+          "servidores": [
+            {
+              "serverName": "Max",
+              "serverHost": "http://maxtvblack.m3ucolletor.com"
+            }
+          ]
+        }
+      ]
     }
   }
 }
